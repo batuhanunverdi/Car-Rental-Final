@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&display=swap');
+.banner-image {
+    background-image: url('images/background.jpg');
+    background-size: cover;
+  }
+body{
+  overflow-x: hidden;
+}
+a{
+  text-decoration: none;
+}
+.card{
+    background-color: rgba(245, 245, 245, 0.4) !important;
+}
+.input-group-append {
+    cursor: pointer;
+  }
+.input-group-date{
+    width: 250px;
+}
+.modal-header {
+  padding: 0;
+}
+.modal-header .close {
+  padding: 10px 15px;
+}
+.modal-header ul {
+  border: none;
+}
+.modal-header ul li {
+  margin: 0;
+}
+.modal-header ul li a {
+  border: none;
+  border-radius: 0;
+}
+.modal-header ul li.active a {
+  color: #e12f27;
+}
+.modal-header ul li a:hover {
+  border: none;
+}
+.modal-header ul li a span {
+  margin-left: 10px;
+}
+.modal-body .form-group {
+  margin-bottom: 10px;
+}
+.bi{
+  color:white;
+}
+.w-100 {
+  width: 100% !important;
+  height: 103vh;
+}
+#myh1{
+  font-family: 'Teko', sans-serif;
+    text-shadow: 6px 0px 4px rgb(0 0 0 / 30%);
+    font-weight: 900 !important;
+    color: whitesmoke;
+}
+@media screen and (max-width: 768px) {
+  h1{
+      font-size:6vw !important;
+  }
+}
+
+#aboutcard{
+  background-color: whitesmoke !important;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  top:30%;
+  margin-bottom: 75px;
+}
+.list-group-item{
+  font-size: 100%;
+}
+.card-img-top{
+  width: 100%;
+  height: 270px;
+}
+.card-title{
+  font-size: 2vw;
+}
+
+@media screen and (max-width: 768px) {
+  .card-title{
+      font-size:3vw !important;
+  }
+
+}
+
+.bookingcars{
+  width: 175px;
+  height: 120px;
+}
+.table-image td, th
+   {
+    vertical-align: middle;
+  }
+
