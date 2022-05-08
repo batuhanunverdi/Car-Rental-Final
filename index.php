@@ -143,7 +143,6 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             return;
         } else {
             $email = test_input($_POST["email"]);
-            // check if e-mail address is well-formed
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $err = "Invalid email format";
                 return;
@@ -194,23 +193,19 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 
     }
 
-    if (isset($_POST["registerSubmit"])) {
-        try {
-            register();
-        } catch (Exception $e) {
-        }
-    }
-    if (isset($_POST["loginSubmit"])) {
-        try {
-            login();
-        } catch (Exception $e) {
-        }
-    }
-    if(isset($_POST["searchSubmit"])){
+    function search(){
 
         if($_SESSION["isLoggedIn"]){
             if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"])){
                 $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
+                $today =date_create(date("d-m-Y"));
+                $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
+                $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]),$today)->format("%r%a");
+                if($currentAndDeliveryDate>0 || $currentAndPickupDate >0){
+                    echo "<script type='text/javascript'>alert('The pickup date or delivery date cannot be earlier than today.');</script>";
+                    return;
+                }
+
                 $day = $day->format("%r%a");
                 if($day<1){
                     echo "<script type='text/javascript'>alert('The pickup date cannot be later than the delivery date. .');</script>";
@@ -230,9 +225,23 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             echo "<script type='text/javascript'>alert('You have to login');</script>";
         }
     }
-//    function search(){
-//
-//    }
+
+    if (isset($_POST["registerSubmit"])) {
+        try {
+            register();
+        } catch (Exception $e) {
+        }
+    }
+    if (isset($_POST["loginSubmit"])) {
+        try {
+            login();
+        } catch (Exception $e) {
+        }
+    }
+    if(isset($_POST["searchSubmit"]))
+    {
+        search();
+    }
 
 }
 
@@ -275,7 +284,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         <div class="input-group date">
                             <label for="pickUpDate"></label><input placeholder="Pick Up Date" class="form-control"
                                                                    type="text" onfocus="(this.type='date')"
-                                                                   id="pickupDate" name="pickupDate">
+                                                                   id="pickupDate" name="pickupDate" min="07-05-2022">
                         </div>
                     </div>
                     <div class="col-lg-3 pb-2 pt-2">
@@ -463,5 +472,4 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
 <script src="script.js"></script>
-
 </html>
