@@ -7,7 +7,6 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="mx-auto"></div>
             <ul class="navbar-nav">
@@ -31,6 +30,9 @@
                 }
                 else{
                 ?>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="index.php?logout">
                         <?php echo $_SESSION["name"]; ?> Logout </a>

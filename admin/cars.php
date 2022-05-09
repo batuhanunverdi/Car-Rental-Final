@@ -16,12 +16,14 @@ $gearQuery = "SELECT `ID`,`GEAR_NAME` FROM gear";
 $engineQuery = "SELECT `ID`,`ENGINE_NAME` FROM engine";
 $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
 
+
 $brandResult = mysqli_query($connect, $brandQuery);
 $colorResult = mysqli_query($connect, $colorQuery);
 $typeResult = mysqli_query($connect, $typeQuery);
 $gearResult = mysqli_query($connect, $gearQuery);
 $engineResult = mysqli_query($connect, $engineQuery);
 $locationResult = mysqli_query($connect, $locationQuery);
+
 
 if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     function addCar()
@@ -130,7 +132,6 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->close();
         $connect->close();
     }
-
     if (isset($_POST['addCar'])) {
         addCar();
     }
@@ -229,15 +230,14 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         }
                         while ($row = $cars->fetch_assoc()) {
                             echo "<tr>
-                                  <td hidden>". $row['ID'] ."</td> 
+                                  <td hidden>". $row['ID']."</td>  
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['PRICE'] . "</td>
                                   <td>" . $row['TYPE_NAME'] . "</td>
                                   <td>" . $row['ENGINE_NAME'] . "</td>
-                                  <td><button class='btn btn-warning' data-toggle=modal
-                                  data-target=#editModal>Edit</button></td>
-                                  <td><a class='btn btn-warning' href=\"delete.php?id=".$row['ID']."\">Delete</a></td>
+                                  <td><a class='btn btn-warning' href=\"editcar.php?id=".$row['ID']."\">Edit</a></td>
+                                  <td><a class='btn btn-warning' href=\"deletecar.php?id=".$row['ID']."\">Delete</a></td>
                                   </tr>";
                         } ?>
                         </tbody>
@@ -246,58 +246,12 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="cars.php">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="carName" placeholder="Car Name">
-                            <label for="carName">Car Name</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="location" placeholder="location">
-                            <label for="location">Location</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="price" placeholder="Car Name">
-                            <label for="price">Price</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <div class="input-group file" id="carPhoto">
-                                <input type="file" class="form-control" id="carPhoto" name="carPhoto">
-                            </div>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="type" placeholder="Car Type">
-                            <label for="cf2">Car Type</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="engine" placeholder="Car Engine">
-                            <label for="cf3">Car Engine</label>
-                        </div>
-                        <div class="d-grid">
-                            <button class="btn btn-warning btn-login text-uppercase fw-bold" type="submit">Edit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
