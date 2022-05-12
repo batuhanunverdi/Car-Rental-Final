@@ -11,13 +11,13 @@
             <div class="mx-auto"></div>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="cars.html">Cars</a>
+                    <a class="nav-link text-white" href="cars.php">Cars</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="about.html">About Us</a>
+                    <a class="nav-link text-white" href="about.php">About Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="contact.html">Contact Us</a>
+                    <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
                 if(!$_SESSION["isLoggedIn"]){
@@ -44,3 +44,4 @@
         </div>
     </div>
 </nav>
+

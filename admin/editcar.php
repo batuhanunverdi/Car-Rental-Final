@@ -1,4 +1,11 @@
 <?php
+session_start();
+if(!$_SESSION["isAdminLoggedIn"]){
+    header("Location:login.php");
+}
+if(!$_GET['id']){
+    header("Location:car.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -152,7 +159,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                CAR_YEAR=?,
                MILEAGE=?,
                PRICE=?,
-               LOCATION=?,
+               LOCATION_ID=?,
                PLATE=?,
                IMAGE=? WHERE ID=?";
         $stmt = $connect->prepare($sql);
@@ -190,7 +197,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 <body>
 <div class="container">
     <div class="col-mg 4" style="margin-top: 15px; margin-left: 250px; margin-right: 250px; ">
-        <form method="post" action="editcar.php?id=<?php echo $id?>" enctype="multipart/form-data">
+        <form method="post" action="cars.php" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <?php while ($row1 = mysqli_fetch_array($editCarNameResult)): ?>
                 <input type="text" placeholder="Car Name" class="form-control" name="editCarName">

@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!$_SESSION["isAdminLoggedIn"]){
+    header("Location:login.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -163,34 +167,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 </head>
 
 <body>
-<div class="sidebar-container">
-    <div class="sidebar-logo">
-        MBU CAR RENTAL
-    </div>
-    <ul class="sidebar-navigation">
-        <li class="header">USER NAME</li>
-        <li>
-            <a href="dashboard.php">
-                <i class="fa fa-home" aria-hidden="true"></i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="bookings.php">
-                <i class="fa fa-book" aria-hidden="true"></i> Bookings
-            </a>
-        </li>
-        <li>
-            <a href="cars.php">
-                <i class="fa fa-car" aria-hidden="true"></i> Cars
-            </a>
-        </li>
-        <li>
-            <a href="login.php">
-                <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
-            </a>
-        </li>
-    </ul>
-</div>
+<?php include('siderbar.php');?>
 
 <div class="content-container">
 

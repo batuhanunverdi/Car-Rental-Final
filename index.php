@@ -4,6 +4,7 @@ session_start();
 if (!isset($_SESSION["isLoggedIn"])) {
     $_SESSION["isLoggedIn"] = false;
 }
+
 if (isset($_GET["logout"])) {
     session_destroy();
     header('Location: index.php');
