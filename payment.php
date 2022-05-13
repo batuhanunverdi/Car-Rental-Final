@@ -55,7 +55,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->execute();
         $stmt->close();
         $connect->close();
-        header("Location:mybookings.php");
+        header("Location:/mybookings.php");
     }
 
     if(isset($_POST["rent"])){
@@ -136,7 +136,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         <div class="col lg">
         </div>
         <div class="col lg">
-            <form class="mb-5 mt-5" method="post" action="payment.php/?id=<?php echo $carId?>">
+            <form class="mb-5 mt-5" method="post" action="/payment.php/?id=<?php echo $carId?>">
                 <div class="form-group">
                     <?php while ($row1 = mysqli_fetch_array($customerResult)): ?>
                         <label for="name">Your Name:</label>

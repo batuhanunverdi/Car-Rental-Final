@@ -27,10 +27,10 @@ $totalCustomer = mysqli_num_rows($totalCustomerResult);
 $totalEmployeeResult = mysqli_query($connect,$totalEmployeeQuery);
 $totalEmployee = mysqli_num_rows($totalEmployeeResult);
 
-$totalEarningQuery = "SELECT SUM(c.PRICE*(datediff(cc.RETURN_DATE,cc.PICK_UP))) AS TOTAL FROM customer_car cc INNER JOIN car c ON c.ID = cc.CAR_ID; ";
+$totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car";
 $totalEarningResult = mysqli_query($connect,$totalEarningQuery);
 $record = mysqli_fetch_array($totalEarningResult);
-$total = $record['TOTAL'];
+$total = $record['SUM(TOTAL_PRICE)'];
 
 ?>
 <!DOCTYPE html>
