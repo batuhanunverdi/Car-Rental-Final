@@ -10,12 +10,12 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
-$suvCarQuery = "SELECT c.IMAGE,CAR_NAME,c.PRICE,ct.TYPE_NAME,e.ENGINE_NAME 
-FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=1;";
+$suvCarQuery = "SELECT c.IMAGE,c.CAR_NAME,c.PRICE,ct.TYPE_NAME,e.ENGINE_NAME 
+FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=1 GROUP BY c.CAR_NAME;";
 $sedanCarQuery = "SELECT c.IMAGE,c.CAR_NAME,c.PRICE,ct.TYPE_NAME,e.ENGINE_NAME 
-FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=2;";
+FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=2 GROUP BY c.CAR_NAME;";
 $hatchbackQuery = "SELECT c.IMAGE,c.CAR_NAME,c.PRICE,ct.TYPE_NAME,e.ENGINE_NAME 
-FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=3;";
+FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=3 GROUP BY c.CAR_NAME;";
 
 $suvCarResut = $connect->query($suvCarQuery);
 $sedanCarResult  =  $connect->query($sedanCarQuery);

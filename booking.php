@@ -128,7 +128,7 @@ if ($connect->connect_error) {
             $deliveryDate = $_SESSION["deliveryDate"];
             $sql = 'SELECT c.ID,c.TYPE_ID,c.GEAR_ID,c.ENGINE_ID,c.CAR_NAME,c.COLOR_ID,c.CAR_YEAR,
                     c.MILEAGE,c.PRICE,l.LOCATION,c.PLATE,c.IMAGE FROM car c INNER JOIN location l 
-                    ON l.ID = c.LOCATION_ID WHERE NOT EXISTS(SELECT * FROM customer_car cc 
+                    ON l.ID = c.LOCATION_ID WHERE c.ID NOT IN(SELECT cc.CAR_ID FROM customer_car cc 
                     WHERE c.ID = cc.CAR_ID AND "' . $pickUpDate . '" BETWEEN cc.PICK_UP AND cc.RETURN_DATE
                     OR ' . $deliveryDate .  ' BETWEEN cc.PICK_UP AND cc.RETURN_DATE) AND l.LOCATION LIKE "%'.$city.'%"';
             $cars = $connect->query($sql);
