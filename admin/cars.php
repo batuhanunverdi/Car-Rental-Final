@@ -196,7 +196,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         <tbody>
                         <?php
                         $connect = new mysqli($hostname, $username, $password, $databaseName);
-                        $sql = "SELECT car.ID,`CAR_NAME`,`LOCATION`,`PRICE`,`TYPE_NAME`,`ENGINE_NAME` 
+                        $sql = "SELECT car.ID,`CAR_NAME`,`LOCATION`,`PRICE`,`TYPE_NAME`,`ENGINE_NAME`,`PLATE` 
                                 FROM car,location,cartype,engine 
                                 WHERE car.TYPE_ID=cartype.ID 
                                 AND car.LOCATION_ID=location.ID
@@ -213,6 +213,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                                   <td>" . $row['PRICE'] . "</td>
                                   <td>" . $row['TYPE_NAME'] . "</td>
                                   <td>" . $row['ENGINE_NAME'] . "</td>
+                                  <td>" . $row['PLATE'] . "</td>
                                   <td><a class='btn btn-warning' href=\"editcar.php?id=".$row['ID']."\">Edit</a></td>
                                   <td><a class='btn btn-warning' href=\"deletecar.php?id=".$row['ID']."\">Delete</a></td>
                                   </tr>";
