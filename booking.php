@@ -14,6 +14,43 @@ if ($connect->connect_error) {
     die("Connection failed: " . $connect->connect_error);
 }
 
+function search(){
+
+    if($_SESSION["isLoggedIn"]){
+        if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"])){
+            $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
+            $today =date_create(date("d-m-Y"));
+            $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
+            $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]),$today)->format("%r%a");
+            if($currentAndDeliveryDate>0 || $currentAndPickupDate >0){
+                echo "<script type='text/javascript'>alert('The pickup date or delivery date cannot be earlier than today.');</script>";
+                return;
+            }
+
+            $day = $day->format("%r%a");
+            if($day<1){
+                echo "<script type='text/javascript'>alert('The pickup date cannot be later than the delivery date. .');</script>";
+            }
+            else {
+                $_SESSION["city"] = $_POST["city"];
+                $_SESSION["pickupDate"] = $_POST["pickupDate"];
+                $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
+                header("Location:booking.php");
+            }
+        }
+        else{
+            echo "<script type='text/javascript'>alert('You have to fill the blanks.');</script>";
+        }
+    }
+    else{
+        echo "<script type='text/javascript'>alert('You have to login');</script>";
+    }
+}
+
+if(isset($_POST["searchSubmit"]))
+{
+    search();
+}
 ?>
 
 <!DOCTYPE html>
@@ -87,24 +124,24 @@ if ($connect->connect_error) {
             <form class="row-g ms-5 ps-5" method="post" action="booking.php">
                 <div class="row form-group">
                     <div class="col-lg-3 pb-2 pt-2">
-                        <input type="text" class="form-control " placeholder="City">
+                        <input type="text" class="form-control " name="city" placeholder="City">
                     </div>
                     <div class="col-lg-3 pb-2 pt-2">
                         <div class="input-group date">
                             <label for="pickUpDate"></label><input placeholder="Pick Up Date" class="form-control"
                                                                    type="text" onfocus="(this.type='date')"
-                                                                   id="pickUpDate">
+                                                                   name="pickupDate">
                         </div>
                     </div>
                     <div class="col-lg-3 pb-2 pt-2">
                         <div class="input-group date">
                             <label for="deliveryDate"></label><input placeholder="Delivery Date" class="form-control"
                                                                      type="text" onfocus="(this.type='date')"
-                                                                     id="deliveryDate">
+                                                                     name="deliveryDate">
                         </div>
                     </div>
                     <div class="col-lg-3 pb-2 pt-2">
-                        <button type="submit" class="btn btn-warning">Search</button>
+                        <button type="submit" name="searchSubmit" class="btn btn-warning">Search</button>
                     </div>
                 </div>
             </form>
@@ -134,6 +171,11 @@ if ($connect->connect_error) {
             $cars = $connect->query($sql);
             if (!$cars) {
                 die("Invalid Query: " . $connect->error);
+            }
+            if(mysqli_num_rows($cars)==0)
+            {
+                echo "<script type='text/javascript'>alert('According to the information you entered, there are no cars available.');
+                    window.location.href='index.php';</script>";
             }
             while ($row = $cars->fetch_assoc()) {
                 echo "<tr>
