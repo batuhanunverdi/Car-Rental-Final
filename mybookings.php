@@ -14,6 +14,7 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +74,9 @@ if ($connect->connect_error) {
                         <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
                             <?php echo $_SESSION["name"]; ?> Logout </a>
                     </li>
@@ -86,7 +90,7 @@ if ($connect->connect_error) {
 <div class="container">
     <div class="row">
         <div class="col-md mt-5 mb-5">
-
+            <h1>Latest Reservations</h1>
             <table class="table table-image table-striped">
                 <thead>
                 <tr>
@@ -100,25 +104,82 @@ if ($connect->connect_error) {
                 </thead>
                 <tbody>
                 <?php
-                $sql="SELECT c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
-                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id";
+                $sql="SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
+                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=0 ORDER BY cc.PICK_UP";
                 $cars = $connect->query($sql);
                 if (!$cars) {
                     die("Invalid Query: " . $connect->error);
                 }
+                $dateNow = date("Y-m-d");
                 while ($row = $cars->fetch_assoc()) {
-                    echo "<tr>
+                    if($dateNow<$row['PICK_UP']){
+                        echo "<tr>
                                   <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['TOTAL_PRICE'] . "</td>
                                   <td>" . $row['PICK_UP'] . "</td>
                                   <td>" . $row['RETURN_DATE'] . "</td>
+                                  <td><a class='btn btn-warning' href=/deletebooking.php?customer=". $id . '&car=' . $row['ID']
+                                    .'&pickUp=' .$row['PICK_UP']. '&returnDate='.$row['RETURN_DATE'].">Cancel</td>
+                                  </tr>";
+                    }
+                    else{
+                        echo "<tr>
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                                  <td>" . $row['CAR_NAME'] . "</td>
+                                  <td>" . $row['LOCATION'] . "</td>
+                                  <td>" . $row['TOTAL_PRICE'] . "</td>
+                                  <td>" . $row['PICK_UP'] . "</td>
+                                  <td>" . $row['RETURN_DATE'] . "</td>
+                                  <td></td>
+
+                                  </tr>";
+                    }
+                }?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md mt-5 mb-5">
+            <h1>Canceled Reservations</h1>
+            <table class="table table-image table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Car</th>
+                    <th scope="col">Car Name</th>
+                    <th scope="col">Delivered Location</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Starting Date</th>
+                    <th scope="col">Ending Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                $sql="SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
+                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=1 ORDER BY cc.PICK_UP";
+                $cars = $connect->query($sql);
+                if (!$cars) {
+                    die("Invalid Query: " . $connect->error);
+                }
+                $dateNow = date("Y-m-d");
+                while ($row = $cars->fetch_assoc()) {
+                        echo "<tr>
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                                  <td>" . $row['CAR_NAME'] . "</td>
+                                  <td>" . $row['LOCATION'] . "</td>
+                                  <td>" . $row['TOTAL_PRICE'] . "</td>
+                                  <td>" . $row['PICK_UP'] . "</td>
+                                  <td>" . $row['RETURN_DATE'] . "</td>
+                                  <td></td>
+
                                   </tr>";
                 }?>
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 

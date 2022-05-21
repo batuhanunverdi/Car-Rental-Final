@@ -13,11 +13,15 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
+$locationQuery = "SELECT * FROM Location";
+$typeQuery = "SELECT * FROM cartype";
+$locationResult = mysqli_query($connect,$locationQuery);
+$typeResult = mysqli_query($connect,$typeQuery);
 
 function search(){
 
     if($_SESSION["isLoggedIn"]){
-        if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"])){
+        if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])){
             $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
             $today =date_create(date("d-m-Y"));
             $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
@@ -35,6 +39,7 @@ function search(){
                 $_SESSION["city"] = $_POST["city"];
                 $_SESSION["pickupDate"] = $_POST["pickupDate"];
                 $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
+                $_SESSION["carType"] = $_POST["carType"];
                 header("Location:booking.php");
             }
         }
@@ -46,6 +51,7 @@ function search(){
         echo "<script type='text/javascript'>alert('You have to login');</script>";
     }
 }
+
 
 if(isset($_POST["searchSubmit"]))
 {
@@ -108,6 +114,9 @@ if(isset($_POST["searchSubmit"]))
                         <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
                             <?php echo $_SESSION["name"]; ?> Logout </a>
                     </li>
@@ -121,27 +130,41 @@ if(isset($_POST["searchSubmit"]))
 <div class="container" style="margin-bottom: 500px">
     <div class="row">
         <div class="col-md mt-5 mb-5">
-            <form class="row-g ms-5 ps-5" method="post" action="booking.php">
+            <form class="row-g 3" method="post" action="booking.php">
                 <div class="row form-group">
-                    <div class="col-lg-3 pb-2 pt-2">
-                        <input type="text" class="form-control " name="city" placeholder="City">
+                    <div class="col-lg pb-2 pt-2">
+                        <select class="form-control" name="city">
+                            <option value="" selected> Location</option>
+                            <?php while ($row1 = mysqli_fetch_array($locationResult)): ?>
+                                <option value="<?php echo $row1['ID']; ?>"><?php echo $row1['LOCATION']; ?></option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
+                    <div class="col-lg pb-2 pt-2">
                         <div class="input-group date">
                             <label for="pickUpDate"></label><input placeholder="Pick Up Date" class="form-control"
                                                                    type="text" onfocus="(this.type='date')"
-                                                                   name="pickupDate">
+                                                                   id="pickupDate" name="pickupDate" min="07-05-2022">
                         </div>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
+                    <div class="col-lg pb-2 pt-2">
                         <div class="input-group date">
                             <label for="deliveryDate"></label><input placeholder="Delivery Date" class="form-control"
                                                                      type="text" onfocus="(this.type='date')"
-                                                                     name="deliveryDate">
+                                                                     id="deliveryDate" name="deliveryDate">
                         </div>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
-                        <button type="submit" name="searchSubmit" class="btn btn-warning">Search</button>
+                    <div class="col-lg pb-2 pt-2">
+                        <select class="form-control" name="carType">
+                            <option value="" selected> Car Type</option>
+                            <?php while ($row1 = mysqli_fetch_array($typeResult)): ?>
+                                <option value="<?php echo $row1['ID']; ?>"><?php echo $row1['TYPE_NAME']; ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="col-lg pb-2 pt-2">
+                        <input type="hidden" name="searchSubmit" value="1">
+                        <input type="submit" id="searchSubmit" value="Search" class="btn btn-warning"></input>
                     </div>
                 </div>
             </form>
@@ -151,7 +174,7 @@ if(isset($_POST["searchSubmit"]))
         <table class="table table-image">
             <thead>
             <tr>
-                <th scope="col">Car</th>
+                <th scope="col"">Car</th>
                 <th scope="col">Car Name</th>
                 <th scope="col">Location</th>
                 <th scope="col">Price</th>
@@ -163,11 +186,11 @@ if(isset($_POST["searchSubmit"]))
             $city = $_SESSION["city"];
             $pickUpDate = $_SESSION["pickupDate"];
             $deliveryDate = $_SESSION["deliveryDate"];
+            $carType = $_SESSION["carType"];
             $sql = 'SELECT c.ID,c.TYPE_ID,c.GEAR_ID,c.ENGINE_ID,c.CAR_NAME,c.COLOR_ID,c.CAR_YEAR,
                     c.MILEAGE,c.PRICE,l.LOCATION,c.PLATE,c.IMAGE FROM car c INNER JOIN location l 
                     ON l.ID = c.LOCATION_ID WHERE c.ID NOT IN(SELECT cc.CAR_ID FROM customer_car cc 
-                    WHERE c.ID = cc.CAR_ID AND "' . $pickUpDate . '" BETWEEN cc.PICK_UP AND cc.RETURN_DATE
-                    OR ' . $deliveryDate .  ' BETWEEN cc.PICK_UP AND cc.RETURN_DATE) AND l.LOCATION LIKE "%'.$city.'%"';
+                    WHERE NOT (cc.RETURN_DATE < "' . $pickUpDate . '" OR cc.PICK_UP > "'.$deliveryDate.'")) AND c.LOCATION_ID ='.$city.' AND c.TYPE_ID='.$carType;
             $cars = $connect->query($sql);
             if (!$cars) {
                 die("Invalid Query: " . $connect->error);
@@ -182,7 +205,7 @@ if(isset($_POST["searchSubmit"]))
                                   <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
-                                  <td>" . $row['PRICE'] . "</td>
+                                  <td>" . $row['PRICE'] . " TL </td>
                                   <td><a class='btn btn-warning' href=\"payment.php?id=".$row['ID']."\">Buy</a></td>
                                   </tr>";
             }?>

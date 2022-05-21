@@ -54,7 +54,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                 if ($row['IS_ACTIVE'] == 1) {
                     if ($row['EMPLOYEE_PASSWORD'] == md5($password)) {
                         $_SESSION["name"] = $row['EMPLOYEE_NAME'];
-                        $_SESSION["id"] = $row['ID'];
+                        $_SESSION["adminId"] = $row['ID'];
                         $_SESSION["isAdminLoggedIn"] = true;
                     } else {
                         $err = "Password is wrong";

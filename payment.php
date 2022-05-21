@@ -55,7 +55,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->execute();
         $stmt->close();
         $connect->close();
-        header("Location:/mybookings.php");
+        header("Location:/mybookings.php?id=$id");
     }
 
     if(isset($_POST["rent"])){

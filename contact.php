@@ -86,6 +86,9 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
                             <?php echo $_SESSION["name"]; ?> Logout </a>
                     </li>

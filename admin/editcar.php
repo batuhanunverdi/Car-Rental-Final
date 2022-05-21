@@ -168,7 +168,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->execute();
         $stmt->close();
         $connect->close();
-        header("Location: admin/cars.php");
+        header("Location: cars.php");
     }
 
     if (isset($_POST['editCar'])) {
@@ -199,7 +199,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 <body>
 <div class="container">
     <div class="col-mg 4" style="margin-top: 15px; margin-left: 250px; margin-right: 250px; ">
-        <form method="post" action="editcar.php/?id=<?php echo $carId?>" enctype="multipart/form-data">
+        <form method="post" action="editcar.php?id=<?php echo $carId?>" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <?php while ($row1 = mysqli_fetch_array($editCarNameResult)): ?>
                 <input type="text" placeholder="Car Name" class="form-control" name="editCarName">

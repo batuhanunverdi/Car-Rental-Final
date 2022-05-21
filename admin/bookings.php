@@ -1,5 +1,8 @@
 <?php
 session_start();
+if(!$_SESSION["isAdminLoggedIn"]){
+    header("Location:login.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -71,7 +74,7 @@ if ($connect->connect_error) {
                         <td>' . $row['CAR_NAME'] . '</td>
                         <td>' . $row['PICK_UP'] . '</td>
                         <td>' . $row['RETURN_DATE'] . '</td>
-                        <td><a class="btn btn-warning" href=/admin/deletebooking.php?customer=' . $row['CUSTOMER_ID'] . '&car=' . $row['CAR_ID'] .">Delete</a></td>
+                        <td><a class="btn btn-warning" href=/admin/deletebooking.php?customer=' . $row['CUSTOMER_ID'] . '&car=' . $row['CAR_ID'] . '&pickUp='.$row['PICK_UP'].">Delete</a></td>
                         </tr>";
                         } ?>
                         </tbody>

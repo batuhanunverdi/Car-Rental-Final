@@ -1,10 +1,10 @@
 <?php
 session_start();
-if(!$_SESSION["isAdminLoggedIn"]){
-    header("Location:login.php");
+if(!$_SESSION["isLoggedIn"]){
+    header("Location:index.php");
 }
-if(!$_GET['customer'] && !$_GET['car']){
-    header("Location:bookings.php");
+if(!$_GET['customer'] && !$_GET['car'] && !$_GET['pickUp'] && !$_GET['returnDate']){
+    header("Location:mybookings.php");
 
 }
 $hostname = "localhost";
@@ -19,10 +19,11 @@ if ($connect->connect_error) {
 $customer = $_GET['customer'];
 $car = $_GET['car'];
 $pickUp = $_GET["pickUp"];
-$sql = "DELETE FROM customer_car WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='".$car.
+$returnDate = $_GET['returnDate'];
+$sql = "UPDATE customer_car SET isActive = 1 WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='".$car.
     "'AND PICK_UP='".$pickUp."'";
 mysqli_query($connect, $sql);
 mysqli_close($connect);
-header("Location: bookings.php");
+header("Location: index.php");
 ?>
 

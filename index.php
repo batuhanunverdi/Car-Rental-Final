@@ -1,6 +1,21 @@
 <?php
 $err = $name = $email = $tc = $password = $license = $dob =  "";
 session_start();
+$servername = "localhost";
+$serverusername = "root";
+$serverpassword = "Sanane5885.";
+$dbname = "carrental";
+
+$conn = new mysqli($servername, $serverusername, $serverpassword, $dbname);
+if ($conn->connect_error) {
+    $conn->close();
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$locationQuery = "SELECT * FROM Location";
+$typeQuery = "SELECT * FROM cartype";
+$locationResult = mysqli_query($conn,$locationQuery);
+$typeResult = mysqli_query($conn,$typeQuery);
 if (!isset($_SESSION["isLoggedIn"])) {
     $_SESSION["isLoggedIn"] = false;
 }
@@ -27,7 +42,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
      */
     function register()
     {
-        global $err, $name, $email, $tc, $password, $license, $dob;
+        global $err, $name, $email, $tc, $password, $license, $dob,$conn;
         $age = "";
         if (empty($_POST["name"])) {
             $err = "Name is required";
@@ -90,17 +105,6 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             $dob = $_POST["dob"];
         }
 
-        $servername = "localhost";
-        $serverusername = "root";
-        $serverpassword = "Sanane5885.";
-        $databasename = "carrental";
-
-        $conn = new mysqli($servername, $serverusername, $serverpassword, $databasename);
-
-        if ($conn->connect_error) {
-            $conn->close();
-            die("Connection failed: " . $conn->connect_error);
-        }
         $sql = "SELECT `CUSTOMER_NAME`,EMAIL,TC_NO,DOB,LICENSE,CUSTOMER_PASSWORD,IS_ACTIVE FROM customer WHERE email='$email'";
         $result = mysqli_query($conn, $sql);
         $count = mysqli_num_rows($result);
@@ -138,7 +142,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
      */
     function login()
     {
-        global $err, $email, $password;
+        global $err, $email, $password,$conn;
         if (empty($_POST["email"])) {
             $err = "Email is empty";
             return;
@@ -155,16 +159,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         } else {
             $password = test_input($_POST["pwd"]);
         }
-        $servername = "localhost";
-        $serverusername = "root";
-        $serverpassword = "Sanane5885.";
-        $dbname = "carrental";
 
-        $conn = new mysqli($servername, $serverusername, $serverpassword, $dbname);
-        if ($conn->connect_error) {
-            $conn->close();
-            die("Connection failed: " . $conn->connect_error);
-        }
         $sql = "SELECT ID,`CUSTOMER_NAME`,EMAIL,TC_NO,DOB,LICENSE,CUSTOMER_PASSWORD,IS_ACTIVE FROM customer WHERE email='$email'";
         $result = mysqli_query($conn, $sql);
         $count = mysqli_num_rows($result);
@@ -197,7 +192,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     function search(){
 
         if($_SESSION["isLoggedIn"]){
-            if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"])){
+            if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])){
                 $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
                 $today =date_create(date("d-m-Y"));
                 $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
@@ -215,6 +210,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     $_SESSION["city"] = $_POST["city"];
                     $_SESSION["pickupDate"] = $_POST["pickupDate"];
                     $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
+                    $_SESSION["carType"] = $_POST["carType"];
                     header("Location:booking.php");
                 }
             }
@@ -276,26 +272,37 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         <div class="card-body">
             <form class="row-g 3" method="post" action="index.php">
                 <div class="row form-group">
-                    <div class="col-lg-3 pb-2 pt-2">
-                        <label>
-                            <input type="text" id="city" class="form-control" name="city" placeholder="City">
-                        </label>
+                    <div class="col-lg pb-2 pt-2">
+                        <select class="form-control" name="city">
+                            <option value="" selected> Location</option>
+                            <?php while ($row1 = mysqli_fetch_array($locationResult)): ?>
+                                <option value="<?php echo $row1['ID']; ?>"><?php echo $row1['LOCATION']; ?></option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
+                    <div class="col-lg pb-2 pt-2">
                         <div class="input-group date">
                             <label for="pickUpDate"></label><input placeholder="Pick Up Date" class="form-control"
                                                                    type="text" onfocus="(this.type='date')"
                                                                    id="pickupDate" name="pickupDate" min="07-05-2022">
                         </div>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
+                    <div class="col-lg pb-2 pt-2">
                         <div class="input-group date">
                             <label for="deliveryDate"></label><input placeholder="Delivery Date" class="form-control"
                                                                      type="text" onfocus="(this.type='date')"
                                                                      id="deliveryDate" name="deliveryDate">
                         </div>
                     </div>
-                    <div class="col-lg-3 pb-2 pt-2">
+                    <div class="col-lg pb-2 pt-2">
+                        <select class="form-control" name="carType">
+                            <option value="" selected> Car Type</option>
+                            <?php while ($row1 = mysqli_fetch_array($typeResult)): ?>
+                                <option value="<?php echo $row1['ID']; ?>"><?php echo $row1['TYPE_NAME']; ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="col-lg pb-2 pt-2">
                         <input type="hidden" name="searchSubmit" value="1">
                         <input type="submit" id="searchSubmit" value="Search" class="btn btn-warning"></input>
                     </div>

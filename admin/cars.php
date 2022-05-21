@@ -189,6 +189,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                             <th scope="col">Price</th>
                             <th scope="col">Type</th>
                             <th scope="col">Engine</th>
+                            <th scope="col">Plate</th>
                             <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
                         </tr>
