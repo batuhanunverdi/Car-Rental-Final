@@ -1,5 +1,5 @@
 <?php
-$err = $name = $email = $tc = $password = $license = $dob =  "";
+$err = $name = $email = $tc = $password = $license = $dob = "";
 session_start();
 $servername = "localhost";
 $serverusername = "root";
@@ -14,8 +14,8 @@ if ($conn->connect_error) {
 
 $locationQuery = "SELECT * FROM Location";
 $typeQuery = "SELECT * FROM cartype";
-$locationResult = mysqli_query($conn,$locationQuery);
-$typeResult = mysqli_query($conn,$typeQuery);
+$locationResult = mysqli_query($conn, $locationQuery);
+$typeResult = mysqli_query($conn, $typeQuery);
 if (!isset($_SESSION["isLoggedIn"])) {
     $_SESSION["isLoggedIn"] = false;
 }
@@ -42,7 +42,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
      */
     function register()
     {
-        global $err, $name, $email, $tc, $password, $license, $dob,$conn;
+        global $err, $name, $email, $tc, $password, $license, $dob, $conn;
         $age = "";
         if (empty($_POST["name"])) {
             $err = "Name is required";
@@ -142,7 +142,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
      */
     function login()
     {
-        global $err, $email, $password,$conn;
+        global $err, $email, $password, $conn;
         if (empty($_POST["email"])) {
             $err = "Email is empty";
             return;
@@ -189,24 +189,24 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 
     }
 
-    function search(){
+    function search()
+    {
 
-        if($_SESSION["isLoggedIn"]){
-            if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])){
-                $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
-                $today =date_create(date("d-m-Y"));
-                $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
-                $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]),$today)->format("%r%a");
-                if($currentAndDeliveryDate>0 || $currentAndPickupDate >0){
+        if ($_SESSION["isLoggedIn"]) {
+            if (!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])) {
+                $day = date_diff(date_create($_POST["pickupDate"]), date_create($_POST["deliveryDate"]));
+                $today = date_create(date("d-m-Y"));
+                $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]), $today)->format("%r%a");
+                $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]), $today)->format("%r%a");
+                if ($currentAndDeliveryDate > 0 || $currentAndPickupDate > 0) {
                     echo "<script type='text/javascript'>alert('The pickup date or delivery date cannot be earlier than today.');</script>";
                     return;
                 }
 
                 $day = $day->format("%r%a");
-                if($day<1){
+                if ($day < 1) {
                     echo "<script type='text/javascript'>alert('The pickup date cannot be later than the delivery date. .');</script>";
-                }
-                else {
+                } else {
                     $_SESSION["city"] = $_POST["city"];
                     $_SESSION["pickupDate"] = $_POST["pickupDate"];
                     $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
@@ -214,12 +214,10 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     $_SESSION["time"] = time() + 150;
                     header("Location:booking.php");
                 }
-            }
-            else{
+            } else {
                 echo "<script type='text/javascript'>alert('You have to fill the blanks.');</script>";
             }
-        }
-        else{
+        } else {
             echo "<script type='text/javascript'>alert('You have to login');</script>";
         }
     }
@@ -236,8 +234,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         } catch (Exception $e) {
         }
     }
-    if(isset($_POST["searchSubmit"]))
-    {
+    if (isset($_POST["searchSubmit"])) {
         search();
     }
 

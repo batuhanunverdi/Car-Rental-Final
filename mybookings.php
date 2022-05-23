@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!$_SESSION["id"]){
+if (!$_SESSION["id"]) {
     header("Location:index.php");
 }
-if($_SESSION["id"]!= $_GET["id"]){
+if ($_SESSION["id"] != $_GET["id"]) {
     header("Location:index.php");
 }
 $id = $_SESSION["id"];
@@ -60,21 +60,23 @@ if ($connect->connect_error) {
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -104,7 +106,7 @@ if ($connect->connect_error) {
                 </thead>
                 <tbody>
                 <?php
-                $sql="SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
+                $sql = "SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
                 INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=0 ORDER BY cc.PICK_UP";
                 $cars = $connect->query($sql);
                 if (!$cars) {
@@ -112,21 +114,20 @@ if ($connect->connect_error) {
                 }
                 $dateNow = date("Y-m-d");
                 while ($row = $cars->fetch_assoc()) {
-                    if($dateNow<$row['PICK_UP']){
+                    if ($dateNow < $row['PICK_UP']) {
                         echo "<tr>
-                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/" . $row['IMAGE'] . "></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['TOTAL_PRICE'] . "</td>
                                   <td>" . $row['PICK_UP'] . "</td>
                                   <td>" . $row['RETURN_DATE'] . "</td>
-                                  <td><a class='btn btn-warning' href=/deletebooking.php?customer=". $id . '&car=' . $row['ID']
-                                    .'&pickUp=' .$row['PICK_UP']. '&returnDate='.$row['RETURN_DATE'].">Cancel</td>
+                                  <td><a class='btn btn-warning' href=/deletebooking.php?customer=" . $id . '&car=' . $row['ID']
+                            . '&pickUp=' . $row['PICK_UP'] . '&returnDate=' . $row['RETURN_DATE'] . ">Cancel</td>
                                   </tr>";
-                    }
-                    else{
+                    } else {
                         echo "<tr>
-                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/" . $row['IMAGE'] . "></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['TOTAL_PRICE'] . "</td>
@@ -136,7 +137,7 @@ if ($connect->connect_error) {
 
                                   </tr>";
                     }
-                }?>
+                } ?>
                 </tbody>
             </table>
         </div>
@@ -157,7 +158,7 @@ if ($connect->connect_error) {
                 </thead>
                 <tbody>
                 <?php
-                $sql="SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
+                $sql = "SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
                 INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=1 ORDER BY cc.PICK_UP";
                 $cars = $connect->query($sql);
                 if (!$cars) {
@@ -165,8 +166,8 @@ if ($connect->connect_error) {
                 }
                 $dateNow = date("Y-m-d");
                 while ($row = $cars->fetch_assoc()) {
-                        echo "<tr>
-                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                    echo "<tr>
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/" . $row['IMAGE'] . "></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['TOTAL_PRICE'] . "</td>
@@ -174,7 +175,7 @@ if ($connect->connect_error) {
                                   <td>" . $row['RETURN_DATE'] . "</td>
                                   <td></td>
                                   </tr>";
-                }?>
+                } ?>
                 </tbody>
             </table>
         </div>

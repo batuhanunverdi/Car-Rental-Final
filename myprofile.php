@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!$_SESSION["isLoggedIn"]){
+if (!$_SESSION["isLoggedIn"]) {
     header("Location:index.php");
 }
-if($_SESSION["id"]!= $_GET["id"]){
+if ($_SESSION["id"] != $_GET["id"]) {
     header("Location:index.php");
 }
 $hostname = "localhost";
@@ -17,8 +17,8 @@ if ($connect->connect_error) {
     die("Connection failed: " . $connect->connect_error);
 }
 $userId = $_GET['id'];
-$userQuery = "SELECT * FROM customer WHERE ID='".$userId."'";
-$userResult = mysqli_query($connect,$userQuery);
+$userQuery = "SELECT * FROM customer WHERE ID='" . $userId . "'";
+$userResult = mysqli_query($connect, $userQuery);
 
 if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     function test_input($data): string
@@ -27,8 +27,10 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $data = stripslashes($data);
         return htmlspecialchars($data);
     }
-    function edit(){
-        global $err, $email, $password, $license, $dob,$connect,$userId;
+
+    function edit()
+    {
+        global $err, $email, $password, $license, $dob, $connect, $userId;
         $age = "";
 
         if (empty($_POST["newemail"])) {
@@ -72,29 +74,29 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             $dob = $_POST["dob"];
         }
         $md5 = md5($password);
-        $stmt= $connect->prepare("SELECT CUSTOMER_PASSWORD FROM customer WHERE id=?");
-        $stmt->bind_param("i",$userId);
+        $stmt = $connect->prepare("SELECT CUSTOMER_PASSWORD FROM customer WHERE id=?");
+        $stmt->bind_param("i", $userId);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
-        if($result['CUSTOMER_PASSWORD']!=$md5){
+        if ($result['CUSTOMER_PASSWORD'] != $md5) {
             $err = "Password is not correct";
             $connect->close();
             return;
         }
-        $stmt= $connect->prepare("SELECT `ID` FROM customer WHERE email=?");
-        $stmt->bind_param("s",$email);
+        $stmt = $connect->prepare("SELECT `ID` FROM customer WHERE email=?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
-        if ($result!=null && (intval($result['ID'])!=intval($userId))) {
+        if ($result != null && (intval($result['ID']) != intval($userId))) {
             $err = "Email is exists";
             $connect->close();
             return;
         }
-        $stmt= $connect->prepare("SELECT `ID` FROM customer WHERE license=?");
-        $stmt->bind_param("s",$license);
+        $stmt = $connect->prepare("SELECT `ID` FROM customer WHERE license=?");
+        $stmt->bind_param("s", $license);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_assoc();
-        if ($result!=null && (intval($result['ID'])!=intval($userId))){
+        if ($result != null && (intval($result['ID']) != intval($userId))) {
             $err = "License Number is exists";
             $connect->close();
             return;
@@ -105,7 +107,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     DOB=?,
                     license=? 
                 WHERE ID=?");
-        $stmt->bind_param("ssssi",$email, $md5,$dob,$license,$userId);
+        $stmt->bind_param("ssssi", $email, $md5, $dob, $license, $userId);
         $stmt->execute();
         $stmt->close();
         $connect->close();
@@ -137,7 +139,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 
@@ -166,21 +168,23 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -195,43 +199,45 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 </nav>
 <div class="container">
     <div class="col-mg 4" style="margin-top: 15px; margin-left: 250px; margin-right: 250px; ">
-        <form method="post" action="myprofile.php?id=<?php echo $userId?>">
-                <div class="form-group">
-                    <?php while ($row1 = mysqli_fetch_array($userResult)): ?>
-                        <label for="floatingInput">Name</label>
-                        <input type="text" readonly="true" class="form-control" name="name" value="<?php echo $row1['CUSTOMER_NAME']; ?>">
-                </div>
-                <div class="form-group">
-                        <label for="floatingInput">Email</label>
-                        <input type="text" placeholder="Email" class="form-control" name="newemail" value="<?php echo $row1['EMAIL']; ?>">
-                </div>
-                <div class="form-group">
-                    <label for="floatingInput">TC:</label>
-                    <input type="text"readonly class="form-control" name="tc" value="<?php echo $row1['TC_NO']; ?>">
+        <form method="post" action="myprofile.php?id=<?php echo $userId ?>">
+            <div class="form-group">
+                <?php while ($row1 = mysqli_fetch_array($userResult)): ?>
+                <label for="floatingInput">Name</label>
+                <input type="text" readonly="true" class="form-control" name="name"
+                       value="<?php echo $row1['CUSTOMER_NAME']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="floatingInput">Email</label>
+                <input type="text" placeholder="Email" class="form-control" name="newemail"
+                       value="<?php echo $row1['EMAIL']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="floatingInput">TC:</label>
+                <input type="text" readonly class="form-control" name="tc" value="<?php echo $row1['TC_NO']; ?>">
 
+            </div>
+            <div class="form-group">
+                <label for="newpwd">Password:</label>
+                <input type="password" class="form-control" id="newpwd" placeholder="Password"
+                       name="newpwd">
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <div class="input-group date">
+                    <input type="date" class="form-control" id="dob" name="dob"
+                           value="<?php echo $row1['DOB']; ?>">
                 </div>
-                <div class="form-group">
-                    <label for="newpwd">Password:</label>
-                    <input type="password" class="form-control" id="newpwd" placeholder="Password"
-                           name="newpwd">
+            </div>
+            <div class="form-group">
+                <label for="license">Drive License</label>
+                <div class="input-group text" id="license">
+                    <input type="text" id="dlicense" name="dlicense"
+                           class="form-control"
+                           placeholder="Drive License" value="<?php echo $row1['LICENSE']; ?>">
+                    <?php endwhile; ?>
                 </div>
-                <div class="form-group">
-                    <label for="dob">Date of Birth:</label>
-                    <div class="input-group date">
-                        <input type="date" class="form-control" id="dob" name="dob"
-                               value="<?php echo $row1['DOB']; ?>">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="license">Drive License</label>
-                    <div class="input-group text" id="license">
-                        <input type="text" id="dlicense" name="dlicense"
-                                                             class="form-control"
-                                                             placeholder="Drive License" value="<?php echo $row1['LICENSE']; ?>">
-                        <?php endwhile;?>
-                    </div>
-                </div>
-                <button type="submit" name="editSubmit" class="btn btn-warning mt-3 mb-3">UPDATE</button>
+            </div>
+            <button type="submit" name="editSubmit" class="btn btn-warning mt-3 mb-3">UPDATE</button>
         </form>
     </div>
 </div>

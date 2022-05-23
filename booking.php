@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!$_SESSION["isLoggedIn"]){
+if (!$_SESSION["isLoggedIn"]) {
     header("Location:index.php");
 }
-if(time()>$_SESSION["time"]){
+if (time() > $_SESSION["time"]) {
     unset($_SESSION["pickupDate"]);
     unset($_SESSION["deliveryDate"]);
     header("Location:index.php");
@@ -20,50 +20,47 @@ if ($connect->connect_error) {
 }
 $locationQuery = "SELECT * FROM Location";
 $typeQuery = "SELECT * FROM cartype";
-$locationResult = mysqli_query($connect,$locationQuery);
-$typeResult = mysqli_query($connect,$typeQuery);
+$locationResult = mysqli_query($connect, $locationQuery);
+$typeResult = mysqli_query($connect, $typeQuery);
 
-$stmt= $connect->prepare("DELETE FROM temporarycars WHERE `created_time` < (NOW() - INTERVAL 2 MINUTE)");
+$stmt = $connect->prepare("DELETE FROM temporarycars WHERE `created_time` < (NOW() - INTERVAL 2 MINUTE)");
 $stmt->execute();
 $stmt->close();
 
-function search(){
+function search()
+{
 
-    if($_SESSION["isLoggedIn"]){
-        if(!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])){
-            $day = date_diff(date_create($_POST["pickupDate"]),date_create($_POST["deliveryDate"]));
-            $today =date_create(date("d-m-Y"));
-            $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]),$today)->format("%r%a");
-            $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]),$today)->format("%r%a");
-            if($currentAndDeliveryDate>0 || $currentAndPickupDate >0){
+    if ($_SESSION["isLoggedIn"]) {
+        if (!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])) {
+            $day = date_diff(date_create($_POST["pickupDate"]), date_create($_POST["deliveryDate"]));
+            $today = date_create(date("d-m-Y"));
+            $currentAndPickupDate = date_diff(date_create($_POST["pickupDate"]), $today)->format("%r%a");
+            $currentAndDeliveryDate = date_diff(date_create($_POST["deliveryDate"]), $today)->format("%r%a");
+            if ($currentAndDeliveryDate > 0 || $currentAndPickupDate > 0) {
                 echo "<script type='text/javascript'>alert('The pickup date or delivery date cannot be earlier than today.');</script>";
                 return;
             }
 
             $day = $day->format("%r%a");
-            if($day<1){
+            if ($day < 1) {
                 echo "<script type='text/javascript'>alert('The pickup date cannot be later than the delivery date. .');</script>";
-            }
-            else {
+            } else {
                 $_SESSION["city"] = $_POST["city"];
                 $_SESSION["pickupDate"] = $_POST["pickupDate"];
                 $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
                 $_SESSION["carType"] = $_POST["carType"];
                 header("Location:booking.php");
             }
-        }
-        else{
+        } else {
             echo "<script type='text/javascript'>alert('You have to fill the blanks.');</script>";
         }
-    }
-    else{
+    } else {
         echo "<script type='text/javascript'>alert('You have to login');</script>";
     }
 }
 
 
-if(isset($_POST["searchSubmit"]))
-{
+if (isset($_POST["searchSubmit"])) {
     search();
 }
 ?>
@@ -83,7 +80,7 @@ if(isset($_POST["searchSubmit"]))
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -109,21 +106,23 @@ if(isset($_POST["searchSubmit"]))
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -183,7 +182,8 @@ if(isset($_POST["searchSubmit"]))
         <table class="table table-image">
             <thead>
             <tr>
-                <th scope="col"">Car</th>
+                <th scope="col"
+                ">Car</th>
                 <th scope="col">Car Name</th>
                 <th scope="col">Location</th>
                 <th scope="col">Price</th>
@@ -199,27 +199,26 @@ if(isset($_POST["searchSubmit"]))
             $sql = 'SELECT c.ID,c.TYPE_ID,c.GEAR_ID,c.ENGINE_ID,c.CAR_NAME,c.COLOR_ID,c.CAR_YEAR,
                     c.MILEAGE,c.PRICE,l.LOCATION,c.PLATE,c.IMAGE FROM car c INNER JOIN location l 
                     ON l.ID = c.LOCATION_ID WHERE c.ID NOT IN(SELECT cc.CAR_ID FROM customer_car cc 
-                    WHERE NOT (cc.RETURN_DATE < "' . $pickUpDate . '" OR cc.PICK_UP > "'.$deliveryDate.'")) AND
-                    c.ID NOT IN (SELECT car_id from `temporarycars` tc WHERE NOT (tc.RETURN_DATE <"'.$pickUpDate.'"
-                    OR tc.PICK_UP > "'.$deliveryDate. '")) AND c.LOCATION_ID ='.$city.' AND c.TYPE_ID='.$carType;
+                    WHERE NOT (cc.RETURN_DATE < "' . $pickUpDate . '" OR cc.PICK_UP > "' . $deliveryDate . '")) AND
+                    c.ID NOT IN (SELECT car_id from `temporarycars` tc WHERE NOT (tc.RETURN_DATE <"' . $pickUpDate . '"
+                    OR tc.PICK_UP > "' . $deliveryDate . '")) AND c.LOCATION_ID =' . $city . ' AND c.TYPE_ID=' . $carType;
             $cars = $connect->query($sql);
             if (!$cars) {
                 die("Invalid Query: " . $connect->error);
             }
-            if(mysqli_num_rows($cars)==0)
-            {
+            if (mysqli_num_rows($cars) == 0) {
                 echo "<script type='text/javascript'>alert('According to the information you entered, there are no cars available.');
                     window.location.href='index.php';</script>";
             }
             while ($row = $cars->fetch_assoc()) {
                 echo "<tr>
-                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/".$row['IMAGE']."></td> 
+                                  <td class='w-25'> <img class='img-fluid img-thumbnail' src=../images/uploads/" . $row['IMAGE'] . "></td> 
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['PRICE'] . " TL </td>
-                                  <td><a class='btn btn-warning' href=\"payment.php?id=".$row['ID']."\">Buy</a></td>
+                                  <td><a class='btn btn-warning' href=\"payment.php?id=" . $row['ID'] . "\">Buy</a></td>
                                   </tr>";
-            }?>
+            } ?>
             </tbody>
         </table>
     </div>

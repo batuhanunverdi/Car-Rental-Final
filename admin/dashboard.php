@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!$_SESSION["isAdminLoggedIn"]){
+if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
 $hostname = "localhost";
@@ -18,17 +18,17 @@ $totalCustomerQuery = "SELECT * from customer";
 $totalEmployeeQuery = "SELECT * from employee";
 
 
-$totalCarResult = mysqli_query($connect,$totalCarQuery);
+$totalCarResult = mysqli_query($connect, $totalCarQuery);
 $totalCar = mysqli_num_rows($totalCarResult);
 
-$totalCustomerResult = mysqli_query($connect,$totalCustomerQuery);
+$totalCustomerResult = mysqli_query($connect, $totalCustomerQuery);
 $totalCustomer = mysqli_num_rows($totalCustomerResult);
 
-$totalEmployeeResult = mysqli_query($connect,$totalEmployeeQuery);
+$totalEmployeeResult = mysqli_query($connect, $totalEmployeeQuery);
 $totalEmployee = mysqli_num_rows($totalEmployeeResult);
 
 $totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car where isActive=0";
-$totalEarningResult = mysqli_query($connect,$totalEarningQuery);
+$totalEarningResult = mysqli_query($connect, $totalEarningQuery);
 $record = mysqli_fetch_array($totalEarningResult);
 $total = $record['SUM(TOTAL_PRICE)'];
 
@@ -49,15 +49,16 @@ $total = $record['SUM(TOTAL_PRICE)'];
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+          integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"/>
 
 </head>
 
 <body style="background-color: whitesmoke;">
-<?php include('siderbar.php');?>
+<?php include('siderbar.php'); ?>
 <div class="content-container">
     <div class="container-fluid">
 

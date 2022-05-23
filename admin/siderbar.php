@@ -5,7 +5,7 @@
         MBU CAR RENTAL
     </div>
     <ul class="sidebar-navigation">
-        <li class="header">Welcome <?php echo $_SESSION["name"]?></li>
+        <li class="header">Welcome <?php echo $_SESSION["name"] ?></li>
         <li>
             <a href="dashboard.php">
                 <i class="fa fa-home" aria-hidden="true"></i> Dashboard

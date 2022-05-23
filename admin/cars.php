@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!$_SESSION["isAdminLoggedIn"]){
+if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
 $hostname = "localhost";
@@ -136,6 +136,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->close();
         $connect->close();
     }
+
     if (isset($_POST['addCar'])) {
         addCar();
     }
@@ -167,7 +168,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 </head>
 
 <body>
-<?php include('siderbar.php');?>
+<?php include('siderbar.php'); ?>
 
 <div class="content-container">
 
@@ -208,15 +209,15 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         }
                         while ($row = $cars->fetch_assoc()) {
                             echo "<tr>
-                                  <td hidden>". $row['ID']."</td>  
+                                  <td hidden>" . $row['ID'] . "</td>  
                                   <td>" . $row['CAR_NAME'] . "</td>
                                   <td>" . $row['LOCATION'] . "</td>
                                   <td>" . $row['PRICE'] . "</td>
                                   <td>" . $row['TYPE_NAME'] . "</td>
                                   <td>" . $row['ENGINE_NAME'] . "</td>
                                   <td>" . $row['PLATE'] . "</td>
-                                  <td><a class='btn btn-warning' href=\"editcar.php?id=".$row['ID']."\">Edit</a></td>
-                                  <td><a class='btn btn-warning' href=\"deletecar.php?id=".$row['ID']."\">Delete</a></td>
+                                  <td><a class='btn btn-warning' href=\"editcar.php?id=" . $row['ID'] . "\">Edit</a></td>
+                                  <td><a class='btn btn-warning' href=\"deletecar.php?id=" . $row['ID'] . "\">Delete</a></td>
                                   </tr>";
                         } ?>
                         </tbody>

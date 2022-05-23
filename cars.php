@@ -18,8 +18,8 @@ $hatchbackQuery = "SELECT c.IMAGE,c.CAR_NAME,c.PRICE,ct.TYPE_NAME,e.ENGINE_NAME
 FROM car c INNER JOIN cartype ct ON ct.ID= c.TYPE_ID INNER JOIN engine e ON e.ID = c.ENGINE_ID WHERE TYPE_ID=3 GROUP BY c.CAR_NAME;";
 
 $suvCarResut = $connect->query($suvCarQuery);
-$sedanCarResult  =  $connect->query($sedanCarQuery);
-$hatchbackResult =  $connect->query($hatchbackQuery);
+$sedanCarResult = $connect->query($sedanCarQuery);
+$hatchbackResult = $connect->query($hatchbackQuery);
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +38,7 @@ $hatchbackResult =  $connect->query($hatchbackQuery);
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 
@@ -67,21 +67,23 @@ $hatchbackResult =  $connect->query($hatchbackQuery);
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -99,12 +101,16 @@ $hatchbackResult =  $connect->query($hatchbackQuery);
         <div class="modal-content">
             <div class="modal-header" style="height: 50px;">
                 <ul class="nav nav-tabs mx-auto">
-                    <li class="active"><button class="btn btn-outline-warning active" data-toggle="tab"
-                                               href="#login-form">
-                            Login <span class="glyphicon glyphicon-user"></span></button></li>
+                    <li class="active">
+                        <button class="btn btn-outline-warning active" data-toggle="tab"
+                                href="#login-form">
+                            Login <span class="glyphicon glyphicon-user"></span></button>
+                    </li>
                     &nbsp;
-                    <li><button class="btn btn-outline-warning" data-toggle="tab" href="#registration-form">
-                            Register <span class="glyphicon glyphicon-pencil"></span></a></button></li>
+                    <li>
+                        <button class="btn btn-outline-warning" data-toggle="tab" href="#registration-form">
+                            Register <span class="glyphicon glyphicon-pencil"></span></a></button>
+                    </li>
                 </ul>
             </div>
             <div class="modal-body">
@@ -163,7 +169,8 @@ $hatchbackResult =  $connect->query($hatchbackQuery);
                             <div class="form-group">
                                 <label for="license">Drive License</label>
                                 <div class="input-group text" id="license">
-                                    <input type="text" class="form-control" placeholder="Drive License" id="licensetext">
+                                    <input type="text" class="form-control" placeholder="Drive License"
+                                           id="licensetext">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-warning mx-auto">Register</button>
@@ -184,77 +191,82 @@ $hatchbackResult =  $connect->query($hatchbackQuery);
             aria-expanded="false" aria-controls="sedan">
         SEDAN
     </button>
-    <button class="btn btn-warning me-4" style="width: 140px;" type="button"  data-toggle="collapse" data-target="hatchback"
+    <button class="btn btn-warning me-4" style="width: 140px;" type="button" data-toggle="collapse"
+            data-target="hatchback"
             aria-expanded="false" aria-controls="hatchback">
         HATCHBACK
     </button>
 </div>
 <div class="container">
     <div class="collapse cars justify-content-md-center align-items-center" id="sedan">
-        <div class="row" >
+        <div class="row">
             <?php
             if (!$sedanCarResult) {
                 die("Invalid Query: " . $connect->error);
             }
             while ($row = $sedanCarResult->fetch_assoc()) {
-                echo" <div class='col-md-4 mb-4'>
+                echo " <div class='col-md-4 mb-4'>
                 <div class='card rounded'>
                     <div class='card-image'>
-                        <img class='card-img-top v-100' src=../images/uploads/".$row['IMAGE']." />
-                        <p class='card-title text-center'>". $row['CAR_NAME']."</p>
+                        <img class='card-img-top v-100' src=../images/uploads/" . $row['IMAGE'] . " />
+                        <p class='card-title text-center'>" . $row['CAR_NAME'] . "</p>
                         <ul class='list-group'>
-                            <li class='list-group-item'>".$row['TYPE_NAME']."</li>
-                            <li class='list-group-item'>".$row['ENGINE_NAME']."</li>
-                            <li class='list-group-item'>". $row["PRICE"]." TL </li>
+                            <li class='list-group-item'>" . $row['TYPE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row['ENGINE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row["PRICE"] . " TL </li>
                         </ul>
                     </div>
                 </div>
-            </div>";} ?>
+            </div>";
+            } ?>
         </div>
     </div>
     <div class="collapse-show cars  justify-content-md-center align-items-center" id="suv">
-        <div class="row" >
+        <div class="row">
             <?php
             if (!$suvCarResut) {
-    die("Invalid Query: " . $connect->error);
-}
-while ($row = $suvCarResut->fetch_assoc()) {
-    echo" <div class='col-md-4 mb-4'>
+                die("Invalid Query: " . $connect->error);
+            }
+            while ($row = $suvCarResut->fetch_assoc()) {
+                echo " <div class='col-md-4 mb-4'>
                 <div class='card rounded'>
                     <div class='card-image'>
-                        <img class='card-img-top v-100' src=../images/uploads/".$row['IMAGE']." />
-                        <p class='card-title text-center'>". $row['CAR_NAME']."</p>
+                        <img class='card-img-top v-100' src=../images/uploads/" . $row['IMAGE'] . " />
+                        <p class='card-title text-center'>" . $row['CAR_NAME'] . "</p>
                         <ul class='list-group'>
-                            <li class='list-group-item'>".$row['TYPE_NAME']."</li>
-                            <li class='list-group-item'>".$row['ENGINE_NAME']."</li>
-                            <li class='list-group-item'>". $row["PRICE"]." TL </li>
+                            <li class='list-group-item'>" . $row['TYPE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row['ENGINE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row["PRICE"] . " TL </li>
                         </ul>
                     </div>
                 </div>
-            </div>";} ?>
+            </div>";
+            } ?>
         </div>
     </div>
     <div class="collapse cars  justify-content-md-center align-items-center" id="hatchback">
-        <div class="row" >
+        <div class="row">
             <?php
             if (!$hatchbackResult) {
                 die("Invalid Query: " . $connect->error);
             }
             while ($row = $hatchbackResult->fetch_assoc()) {
-                echo" <div class='col-md-4 mb-4'>
+                echo " <div class='col-md-4 mb-4'>
                 <div class='card rounded'>
                     <div class='card-image'>
-                        <img class='card-img-top v-100' src=../images/uploads/".$row['IMAGE']." />
-                        <p class='card-title text-center'>". $row['CAR_NAME']."</p>
+                        <img class='card-img-top v-100' src=../images/uploads/" . $row['IMAGE'] . " />
+                        <p class='card-title text-center'>" . $row['CAR_NAME'] . "</p>
                         <ul class='list-group'>
-                            <li class='list-group-item'>".$row['TYPE_NAME']."</li>
-                            <li class='list-group-item'>".$row['ENGINE_NAME']."</li>
-                            <li class='list-group-item'>". $row["PRICE"]." TL </li>
+                            <li class='list-group-item'>" . $row['TYPE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row['ENGINE_NAME'] . "</li>
+                            <li class='list-group-item'>" . $row["PRICE"] . " TL </li>
                         </ul>
                     </div>
                 </div>
-            </div>";} ?>
-        </div>    </div>
+            </div>";
+            } ?>
+        </div>
+    </div>
     <div class="col-md-12 text-center pt-4 pb-4">
         <a class="btn btn-warning text-center mb-4" href="index.php">RENT NOW </a>
     </div>

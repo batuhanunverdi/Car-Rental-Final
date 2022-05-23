@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!$_SESSION["isAdminLoggedIn"]){
+if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
-if(!$_GET['customer'] && !$_GET['car']){
+if (!$_GET['customer'] && !$_GET['car']) {
     header("Location:bookings.php");
 
 }
@@ -19,8 +19,8 @@ if ($connect->connect_error) {
 $customer = $_GET['customer'];
 $car = $_GET['car'];
 $pickUp = $_GET["pickUp"];
-$sql = "DELETE FROM customer_car WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='".$car.
-    "'AND PICK_UP='".$pickUp."'";
+$sql = "DELETE FROM customer_car WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='" . $car .
+    "'AND PICK_UP='" . $pickUp . "'";
 mysqli_query($connect, $sql);
 mysqli_close($connect);
 header("Location: bookings.php");

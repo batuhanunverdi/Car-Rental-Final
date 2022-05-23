@@ -1,13 +1,13 @@
 <?php
 session_start();
-if(!$_SESSION["isLoggedIn"]){
+if (!$_SESSION["isLoggedIn"]) {
     header("Location:index.php");
 }
-if(!$_SESSION["pickupDate"] ||!$_SESSION["deliveryDate"] || !$_GET["id"]){
+if (!$_SESSION["pickupDate"] || !$_SESSION["deliveryDate"] || !$_GET["id"]) {
     header("Location:index.php");
 }
 
-if(time()>$_SESSION["time"]){
+if (time() > $_SESSION["time"]) {
     unset($_SESSION["pickupDate"]);
     unset($_SESSION["deliveryDate"]);
     header("Location:index.php");
@@ -27,8 +27,8 @@ $CustomerQuery = "SELECT * FROM customer WHERE ID =$id";
 $carId = $_GET["id"];
 $pickupDate = $_SESSION["pickupDate"];
 $deliveryDate = $_SESSION["deliveryDate"];
-$stmt= $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE) VALUES(?,?,?)");
-$stmt->bind_param("iss",$carId,$pickupDate,$deliveryDate);
+$stmt = $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE) VALUES(?,?,?)");
+$stmt->bind_param("iss", $carId, $pickupDate, $deliveryDate);
 $stmt->execute();
 $stmt->close();
 
@@ -36,50 +36,48 @@ $stmt->close();
 $CarQuery = "SELECT c.CAR_NAME,l.LOCATION,c.PRICE FROM car c INNER JOIN location l ON l.ID = c.LOCATION_ID WHERE c.ID =$carId";
 $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
 $locationResult = mysqli_query($connect, $locationQuery);
-$carResult = mysqli_query($connect,$CarQuery);
-$customerResult = mysqli_query($connect,$CustomerQuery);
+$carResult = mysqli_query($connect, $CarQuery);
+$customerResult = mysqli_query($connect, $CustomerQuery);
 
 if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
-    function rent(){
-        global $err,$dropAddress,$cardNumber,$CVV,$connect,$id,$carId,$pickupDate,$deliveryDate;
-        if(empty($_POST["delivered"])){
+    function rent()
+    {
+        global $err, $dropAddress, $cardNumber, $CVV, $connect, $id, $carId, $pickupDate, $deliveryDate;
+        if (empty($_POST["delivered"])) {
             $err = "You have to choose a delivery location";
             return;
-        }
-        else{
+        } else {
             $dropAddress = intval($_POST["delivered"]);
         }
-        if(empty($_POST["cardnumber"])){
+        if (empty($_POST["cardnumber"])) {
             $err = "You have to enter a a card number";
             return;
-        }
-        else{
+        } else {
             $cardNumber = intval($_POST["cardnumber"]);
         }
-        if(empty($_POST["cvv"])){
+        if (empty($_POST["cvv"])) {
             $err = "You have to enter the cvv correctly";
             return;
-        }
-        else{
+        } else {
             $CVV = intval($_POST["cvv"]);
         }
         $price = $_POST["price"];
 
         $stmt = $connect->prepare("INSERT INTO customer_car(`CUSTOMER_ID`,`CAR_ID`,`PICK_UP`
         ,`RETURN_DATE`,`RETURN_LOCATION_ID`,`TOTAL_PRICE`) VALUES(?,?,?,?,?,?)");
-        $stmt->bind_param("iissii",$id,$carId,$pickupDate,$deliveryDate,$dropAddress,$price);
+        $stmt->bind_param("iissii", $id, $carId, $pickupDate, $deliveryDate, $dropAddress, $price);
         $stmt->execute();
         $stmt->close();
         unset($_SESSION["pickupDate"]);
         unset($_SESSION["deliveryDate"]);
         header("Location:/mybookings.php?id=$id");
-        $stmt= $connect->prepare("DELETE FROM temporarycars WHERE id=$carId");
+        $stmt = $connect->prepare("DELETE FROM temporarycars WHERE id=$carId");
         $stmt->execute();
         $stmt->close();
         $connect->close();
     }
 
-    if(isset($_POST["rent"])){
+    if (isset($_POST["rent"])) {
         rent();
     }
 }
@@ -100,7 +98,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -127,18 +125,19 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -157,48 +156,48 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         <div class="col lg">
         </div>
         <div class="col lg">
-            <form class="mb-5 mt-5" method="post" action="/payment.php/?id=<?php echo $carId?>">
+            <form class="mb-5 mt-5" method="post" action="/payment.php/?id=<?php echo $carId ?>">
                 <div class="form-group">
                     <?php while ($row1 = mysqli_fetch_array($customerResult)): ?>
-                        <label for="name">Your Name:</label>
+                    <label for="name">Your Name:</label>
                     <input type="text" readonly="true" class="form-control" id="name"
-                           value="<?php echo $row1["CUSTOMER_NAME"];?>" name="name">
+                           value="<?php echo $row1["CUSTOMER_NAME"]; ?>" name="name">
                 </div>
                 <div class="form-group">
                     <label for="newemail">Email:</label>
                     <input type="email" readonly="true" class="form-control" id="newemail"
-                           value="<?php echo $row1["EMAIL"];?>" name="newemail">
+                           value="<?php echo $row1["EMAIL"]; ?>" name="newemail">
                 </div>
                 <div class="form-group">
                     <label for="tcno">TC:</label>
                     <input type="text" readonly="true" class="form-control" id="tcno"
-                           value="<?php echo $row1["TC_NO"];?> " name="tcno">
+                           value="<?php echo $row1["TC_NO"]; ?> " name="tcno">
                 </div>
-                <?php endwhile;?>
+                <?php endwhile; ?>
 
                 <div class="form-group">
                     <?php while ($row1 = mysqli_fetch_array($carResult)): ?>
                     <label for="carname">Car Name:</label>
                     <input type="text" readonly="true" class="form-control" id="carname"
-                           value="<?php echo $row1["CAR_NAME"];?>" name="carname">
+                           value="<?php echo $row1["CAR_NAME"]; ?>" name="carname">
                 </div>
                 <div class="form-group">
                     <label for="location">Location:</label>
                     <input type="text" readonly="true" class="form-control" id="location"
-                           value="<?php echo $row1["LOCATION"];?>" name="location">
+                           value="<?php echo $row1["LOCATION"]; ?>" name="location">
                 </div>
                 <div class="form-group">
                     <label for="price">Price:</label>
                     <input type="text" readonly="true" class="form-control" id="price"
-                           value="<?php echo $row1["PRICE"]*(date_diff(date_create($_SESSION["pickupDate"]),
-                                   date_create($_SESSION["deliveryDate"]))->d);?>" name="price">
+                           value="<?php echo $row1["PRICE"] * (date_diff(date_create($_SESSION["pickupDate"]),
+                                   date_create($_SESSION["deliveryDate"]))->d); ?>" name="price">
                 </div>
-                <?php endwhile;?>
+            <?php endwhile; ?>
                 <div class="form-group">
                     <label for="dob">Starting Date:</label>
                     <div class="input-group date" id="dobDatePicker">
                         <input type="text" readonly="true" class="form-control" id="startDatePicker"
-                               value="<?php echo $_SESSION["pickupDate"];?>">
+                               value="<?php echo $_SESSION["pickupDate"]; ?>">
                         <span class="input-group-append">
                                 <span class="input-group-text bg-white d-block">
                                     <i class="fa fa-calendar"></i>
@@ -210,7 +209,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     <label for="dob">Ending Date:</label>
                     <div class="input-group date" id="dobDatePicker">
                         <input type="text" readonly="true" class="form-control" id="endDatePicker"
-                               value="<?php echo $_SESSION["deliveryDate"];?>">
+                               value="<?php echo $_SESSION["deliveryDate"]; ?>">
                         <span class="input-group-append">
                                 <span class="input-group-text bg-white d-block">
                                     <i class="fa fa-calendar"></i>

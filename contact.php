@@ -12,7 +12,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $connect->close();
         die("Connection failed: " . $connect->connect_error);
     }
-    if(empty($_POST["textArea1"]) || empty($_POST["subject"]) || empty($_POST["sendEmail"])){
+    if (empty($_POST["textArea1"]) || empty($_POST["subject"]) || empty($_POST["sendEmail"])) {
         $err = "You have too fill the all blanks.";
     }
     $email = $_POST["sendEmail"];
@@ -21,7 +21,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 
     $sql = "INSERT INTO contact(email,subject,message) VALUES(?,?,?)";
     $stmt = $connect->prepare($sql);
-    $stmt->bind_param("sss",$email,$subject,$message);
+    $stmt->bind_param("sss", $email, $subject, $message);
     $stmt->execute();
     $stmt->close();
     $connect->close();
@@ -43,7 +43,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 
@@ -72,21 +72,23 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     <a class="nav-link text-white" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                if(!$_SESSION["isLoggedIn"]){
+                if (!$_SESSION["isLoggedIn"]) {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal" data-bs-target="#userForm">Login / Sign
+                        <a class="nav-link text-white" href="#userForm" data-bs-toggle="modal"
+                           data-bs-target="#userForm">Login / Sign
                             Up</a>
                     </li>
                     <?php
-                }
-                else{
+                } else {
                     ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id']?> >My Bookings</a>
+                        <a class="nav-link text-white" href=mybookings.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id']?> >My Profile</a>
+                        <a class="nav-link text-white" href=myprofile.php?id=<?php echo $_SESSION['id'] ?> >My
+                            Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="index.php?logout">
@@ -113,7 +115,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 <div class="col-lg p-e-4">
-                    <form method="post" class="form-group" action="contact.php" >
+                    <form method="post" class="form-group" action="contact.php">
                         <div class="form-grop">
                             <label for="email">Email:</label>
                             <input type="email" class="form-control" id="email" placeholder="Enter email"
@@ -131,19 +133,24 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         </div>
                         <div class="form-group"></div>
                         <button type="submit" onclick="alert('Your Message has sent');"
-                                class="btn btn-warning">Send</button>
+                                class="btn btn-warning">Send
+                        </button>
                         <div class="text-dark">
                             <div class="col-md-8">
-                                <i class="bi bi-facebook" style="color:black;"></i> <a style=color:black; href="#" >MBU Rental Facebook</a>
+                                <i class="bi bi-facebook" style="color:black;"></i> <a style=color:black; href="#">MBU
+                                    Rental Facebook</a>
                             </div>
                             <div class="col-md-8">
-                                <i class="bi bi-twitter" style="color:black;"></i> <a style=color:black; href="#" >MBU Rental Twitter</a>
+                                <i class="bi bi-twitter" style="color:black;"></i> <a style=color:black; href="#">MBU
+                                    Rental Twitter</a>
                             </div>
                             <div class="col-md-8">
-                                <i class="bi bi-github" style="color:black;"></i> <a style=color:black; href="#" >MBU Rental Github</a>
+                                <i class="bi bi-github" style="color:black;"></i> <a style=color:black; href="#">MBU
+                                    Rental Github</a>
                             </div>
                             <div class="col-md-8">
-                                <i class="bi bi-telephone-fill" style="color:black;"></i> <a style=color:black; href="#" >MBU Rental</a>
+                                <i class="bi bi-telephone-fill" style="color:black;"></i> <a style=color:black;
+                                                                                             href="#">MBU Rental</a>
                             </div>
 
                         </div>
@@ -163,12 +170,16 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         <div class="modal-content">
             <div class="modal-header" style="height: 50px;">
                 <ul class="nav nav-tabs mx-auto">
-                    <li class="active"><button class="btn btn-outline-warning active" data-toggle="tab"
-                                               href="#login-form">
-                            Login <span class="glyphicon glyphicon-user"></span></button></li>
+                    <li class="active">
+                        <button class="btn btn-outline-warning active" data-toggle="tab"
+                                href="#login-form">
+                            Login <span class="glyphicon glyphicon-user"></span></button>
+                    </li>
                     &nbsp;
-                    <li><button class="btn btn-outline-warning" data-toggle="tab" href="#registration-form">
-                            Register <span class="glyphicon glyphicon-pencil"></span></a></button></li>
+                    <li>
+                        <button class="btn btn-outline-warning" data-toggle="tab" href="#registration-form">
+                            Register <span class="glyphicon glyphicon-pencil"></span></a></button>
+                    </li>
                 </ul>
             </div>
             <div class="modal-body">
@@ -227,7 +238,8 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                             <div class="form-group">
                                 <label for="license">Drive License</label>
                                 <div class="input-group text" id="license">
-                                    <input type="text" class="form-control" placeholder="Drive License" id="licensetext">
+                                    <input type="text" class="form-control" placeholder="Drive License"
+                                           id="licensetext">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-warning mx-auto">Register</button>

@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(!$_SESSION["isAdminLoggedIn"]){
+if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
-if(!$_GET['id']){
+if (!$_GET['id']) {
     header("Location:admin/cars.php");
 }
 $carId = $_GET['id'];
@@ -24,12 +24,11 @@ $typeQuery = "SELECT `ID`,`TYPE_NAME` FROM cartype";
 $gearQuery = "SELECT `ID`,`GEAR_NAME` FROM gear";
 $engineQuery = "SELECT `ID`,`ENGINE_NAME` FROM engine";
 $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
-$editCarName  = "SELECT CAR_NAME FROM car WHERE ID='" . $id . "'";
+$editCarName = "SELECT CAR_NAME FROM car WHERE ID='" . $id . "'";
 $editCarPrice = "SELECT PRICE FROM car WHERE ID='" . $id . "'";
-$editCarYear  = "SELECT CAR_YEAR FROM car WHERE ID='" . $id . "'";
-$editCarMileage  = "SELECT MILEAGE FROM car WHERE ID='" . $id . "'";
-$editCarPlate  = "SELECT PLATE FROM car WHERE ID='" . $id . "'";
-
+$editCarYear = "SELECT CAR_YEAR FROM car WHERE ID='" . $id . "'";
+$editCarMileage = "SELECT MILEAGE FROM car WHERE ID='" . $id . "'";
+$editCarPlate = "SELECT PLATE FROM car WHERE ID='" . $id . "'";
 
 
 $brandResult = mysqli_query($connect, $brandQuery);
@@ -38,16 +37,16 @@ $typeResult = mysqli_query($connect, $typeQuery);
 $gearResult = mysqli_query($connect, $gearQuery);
 $engineResult = mysqli_query($connect, $engineQuery);
 $locationResult = mysqli_query($connect, $locationQuery);
-$editCarNameResult = mysqli_query($connect,$editCarName);
-$editCarPriceResult = mysqli_query($connect,$editCarPrice);
-$editCarYearResult = mysqli_query($connect,$editCarYear);
-$editCarMileageResult = mysqli_query($connect,$editCarMileage);
-$editCarPlateResult = mysqli_query($connect,$editCarPlate);
+$editCarNameResult = mysqli_query($connect, $editCarName);
+$editCarPriceResult = mysqli_query($connect, $editCarPrice);
+$editCarYearResult = mysqli_query($connect, $editCarYear);
+$editCarMileageResult = mysqli_query($connect, $editCarMileage);
+$editCarPlateResult = mysqli_query($connect, $editCarPlate);
 
 if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     function editCar()
     {
-        global $err, $newImageName, $connect,$id;
+        global $err, $newImageName, $connect, $id;
         $carName = $brand = $color = $type = $gear = $engine = $price = $location = $year = $mileage = $plate = "";
         if (empty($_POST["editCarName"])) {
             $err = "Car name can not be empty";
@@ -138,12 +137,12 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $sql = "SELECT `ID`,`PLATE` FROM car WHERE PLATE='$plate'";
         $result = mysqli_query($connect, $sql);
         $count = mysqli_num_rows($result);
-        $plateCheck="";
-        while ($row = $result->fetch_assoc()){
-            $plateCheck= $row["ID"];
+        $plateCheck = "";
+        while ($row = $result->fetch_assoc()) {
+            $plateCheck = $row["ID"];
         }
         if ($count > 0) {
-            if($id!=$plateCheck){
+            if ($id != $plateCheck) {
                 $err = "Plate Number is exists";
                 $connect->close();
                 return;
@@ -164,7 +163,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                PLATE=?,
                IMAGE=? WHERE ID=?";
         $stmt = $connect->prepare($sql);
-        $stmt->bind_param("iiiisisiiissi", $brand, $type, $gear, $engine, $carName, $color, $year, $mileage, $price, $location, $plate, $newImageName,$id);
+        $stmt->bind_param("iiiisisiiissi", $brand, $type, $gear, $engine, $carName, $color, $year, $mileage, $price, $location, $plate, $newImageName, $id);
         $stmt->execute();
         $stmt->close();
         $connect->close();
@@ -199,12 +198,12 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 <body>
 <div class="container">
     <div class="col-mg 4" style="margin-top: 15px; margin-left: 250px; margin-right: 250px; ">
-        <form method="post" action="editcar.php?id=<?php echo $carId?>" enctype="multipart/form-data">
+        <form method="post" action="editcar.php?id=<?php echo $carId ?>" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <?php while ($row1 = mysqli_fetch_array($editCarNameResult)): ?>
-                <input type="text" placeholder="Car Name" class="form-control" name="editCarName">
-                <label for="floatingInput"><?php echo $row1['CAR_NAME']; ?></label>
-                <?php endwhile;?>
+                    <input type="text" placeholder="Car Name" class="form-control" name="editCarName">
+                    <label for="floatingInput"><?php echo $row1['CAR_NAME']; ?></label>
+                <?php endwhile; ?>
             </div>
             <div class="form-floating mb-3">
                 <select class="form-control" name="editBrand">
@@ -226,7 +225,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                 <?php while ($row2 = mysqli_fetch_array($editCarPriceResult)): ?>
                     <input type="text" placeholder="Car Name" class="form-control" name="editPrice">
                     <label for="floatingInput"><?php echo $row2['PRICE']; ?></label>
-                <?php endwhile;?>
+                <?php endwhile; ?>
             </div>
             <div class="form-floating mb-3">
                 <div class="input-group file" id="carImage">
@@ -269,19 +268,19 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                 <?php while ($row1 = mysqli_fetch_array($editCarYearResult)): ?>
                     <input type="text" placeholder="Car Name" class="form-control" name="editCarYear">
                     <label for="floatingInput"><?php echo $row1['CAR_YEAR']; ?></label>
-                <?php endwhile;?>
+                <?php endwhile; ?>
             </div>
             <div class="form-floating mb-3">
                 <?php while ($row1 = mysqli_fetch_array($editCarMileageResult)): ?>
                     <input type="text" placeholder="Car Name" class="form-control" name="editCarMileage">
                     <label for="floatingInput"><?php echo $row1['MILEAGE']; ?></label>
-                <?php endwhile;?>
+                <?php endwhile; ?>
             </div>
             <div class="form-floating mb-3">
                 <?php while ($row1 = mysqli_fetch_array($editCarPlateResult)): ?>
                     <input type="text" placeholder="Car Name" class="form-control" name="editCarPlate">
                     <label for="floatingInput"><?php echo $row1['PLATE']; ?></label>
-                <?php endwhile;?>
+                <?php endwhile; ?>
             </div>
             <div class="d-grid">
                 <button class="btn btn-warning btn-login text-uppercase fw-bold" name="editCar"
