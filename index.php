@@ -211,6 +211,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                     $_SESSION["pickupDate"] = $_POST["pickupDate"];
                     $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
                     $_SESSION["carType"] = $_POST["carType"];
+                    $_SESSION["time"] = time() + 150;
                     header("Location:booking.php");
                 }
             }

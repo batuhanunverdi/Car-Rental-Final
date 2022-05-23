@@ -3,6 +3,11 @@ session_start();
 if(!$_SESSION["isLoggedIn"]){
     header("Location:index.php");
 }
+if(time()>$_SESSION["time"]){
+    unset($_SESSION["pickupDate"]);
+    unset($_SESSION["deliveryDate"]);
+    header("Location:index.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";

@@ -6,11 +6,12 @@ if(!$_SESSION["isLoggedIn"]){
 if(!$_SESSION["pickupDate"] ||!$_SESSION["deliveryDate"] || !$_GET["id"]){
     header("Location:index.php");
 }
-//if(time() - $_SESSION["pickupDate"]>120){
-//    unset($_SESSION["pickupDate"]);
-//    unset($_SESSION["deliveryDate"]);
-//    header("Location:index.php");
-//}
+
+if(time()>$_SESSION["time"]){
+    unset($_SESSION["pickupDate"]);
+    unset($_SESSION["deliveryDate"]);
+    header("Location:index.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
