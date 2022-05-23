@@ -27,7 +27,7 @@ $totalCustomer = mysqli_num_rows($totalCustomerResult);
 $totalEmployeeResult = mysqli_query($connect,$totalEmployeeQuery);
 $totalEmployee = mysqli_num_rows($totalEmployeeResult);
 
-$totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car";
+$totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car where isActive=0";
 $totalEarningResult = mysqli_query($connect,$totalEarningQuery);
 $record = mysqli_fetch_array($totalEarningResult);
 $total = $record['SUM(TOTAL_PRICE)'];

@@ -3,6 +3,14 @@ session_start();
 if(!$_SESSION["isLoggedIn"]){
     header("Location:index.php");
 }
+if(!$_SESSION["pickupDate"] ||!$_SESSION["deliveryDate"] || !$_GET["id"]){
+    header("Location:index.php");
+}
+//if(time() - $_SESSION["pickupDate"]>120){
+//    unset($_SESSION["pickupDate"]);
+//    unset($_SESSION["deliveryDate"]);
+//    header("Location:index.php");
+//}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -16,13 +24,20 @@ if ($connect->connect_error) {
 $id = $_SESSION["id"];
 $CustomerQuery = "SELECT * FROM customer WHERE ID =$id";
 $carId = $_GET["id"];
+$pickupDate = $_SESSION["pickupDate"];
+$deliveryDate = $_SESSION["deliveryDate"];
+$stmt= $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE) VALUES(?,?,?)");
+$stmt->bind_param("iss",$carId,$pickupDate,$deliveryDate);
+$stmt->execute();
+$stmt->close();
+
+
 $CarQuery = "SELECT c.CAR_NAME,l.LOCATION,c.PRICE FROM car c INNER JOIN location l ON l.ID = c.LOCATION_ID WHERE c.ID =$carId";
 $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
 $locationResult = mysqli_query($connect, $locationQuery);
 $carResult = mysqli_query($connect,$CarQuery);
 $customerResult = mysqli_query($connect,$CustomerQuery);
-$pickupDate = $_SESSION["pickupDate"];
-$deliveryDate = $_SESSION["deliveryDate"];
+
 if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
     function rent(){
         global $err,$dropAddress,$cardNumber,$CVV,$connect,$id,$carId,$pickupDate,$deliveryDate;
@@ -54,8 +69,13 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->bind_param("iissii",$id,$carId,$pickupDate,$deliveryDate,$dropAddress,$price);
         $stmt->execute();
         $stmt->close();
-        $connect->close();
+        unset($_SESSION["pickupDate"]);
+        unset($_SESSION["deliveryDate"]);
         header("Location:/mybookings.php?id=$id");
+        $stmt= $connect->prepare("DELETE FROM temporarycars WHERE id=$carId");
+        $stmt->execute();
+        $stmt->close();
+        $connect->close();
     }
 
     if(isset($_POST["rent"])){

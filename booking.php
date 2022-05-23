@@ -18,6 +18,10 @@ $typeQuery = "SELECT * FROM cartype";
 $locationResult = mysqli_query($connect,$locationQuery);
 $typeResult = mysqli_query($connect,$typeQuery);
 
+$stmt= $connect->prepare("DELETE FROM temporarycars WHERE `created_time` < (NOW() - INTERVAL 2 MINUTE)");
+$stmt->execute();
+$stmt->close();
+
 function search(){
 
     if($_SESSION["isLoggedIn"]){
@@ -190,7 +194,9 @@ if(isset($_POST["searchSubmit"]))
             $sql = 'SELECT c.ID,c.TYPE_ID,c.GEAR_ID,c.ENGINE_ID,c.CAR_NAME,c.COLOR_ID,c.CAR_YEAR,
                     c.MILEAGE,c.PRICE,l.LOCATION,c.PLATE,c.IMAGE FROM car c INNER JOIN location l 
                     ON l.ID = c.LOCATION_ID WHERE c.ID NOT IN(SELECT cc.CAR_ID FROM customer_car cc 
-                    WHERE NOT (cc.RETURN_DATE < "' . $pickUpDate . '" OR cc.PICK_UP > "'.$deliveryDate.'")) AND c.LOCATION_ID ='.$city.' AND c.TYPE_ID='.$carType;
+                    WHERE NOT (cc.RETURN_DATE < "' . $pickUpDate . '" OR cc.PICK_UP > "'.$deliveryDate.'")) AND
+                    c.ID NOT IN (SELECT car_id from `temporarycars` tc WHERE NOT (tc.RETURN_DATE <"'.$pickUpDate.'"
+                    OR tc.PICK_UP > "'.$deliveryDate. '")) AND c.LOCATION_ID ='.$city.' AND c.TYPE_ID='.$carType;
             $cars = $connect->query($sql);
             if (!$cars) {
                 die("Invalid Query: " . $connect->error);

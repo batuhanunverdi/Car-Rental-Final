@@ -3,6 +3,9 @@ session_start();
 if(!$_SESSION["isLoggedIn"]){
     header("Location:index.php");
 }
+if($_SESSION["id"]!= $_GET["id"]){
+    header("Location:index.php");
+}
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -97,18 +100,16 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             return;
         }
         $stmt = $connect->prepare("UPDATE customer SET 
-                    `CUSTOMER_NAME`=?,
                     EMAIL=?,
-                    TC_NO=?,
                     `CUSTOMER_PASSWORD`=?,
                     DOB=?,
                     license=? 
                 WHERE ID=?");
-        $stmt->bind_param("sssssi",$_POST["name"],$email,$_POST["tc"], $md5,$dob,$license,$userId);
+        $stmt->bind_param("ssssi",$email, $md5,$dob,$license,$userId);
         $stmt->execute();
         $stmt->close();
         $connect->close();
-        header("Location:index.php");
+        header("Location:myprofile.php?id=$userId");
     }
 
     if (isset($_POST["editSubmit"])) {

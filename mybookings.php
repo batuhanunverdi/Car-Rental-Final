@@ -3,6 +3,9 @@ session_start();
 if(!$_SESSION["id"]){
     header("Location:index.php");
 }
+if($_SESSION["id"]!= $_GET["id"]){
+    header("Location:index.php");
+}
 $id = $_SESSION["id"];
 $hostname = "localhost";
 $username = "root";
@@ -14,12 +17,9 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -173,7 +173,6 @@ if ($connect->connect_error) {
                                   <td>" . $row['PICK_UP'] . "</td>
                                   <td>" . $row['RETURN_DATE'] . "</td>
                                   <td></td>
-
                                   </tr>";
                 }?>
                 </tbody>
