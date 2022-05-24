@@ -3,8 +3,9 @@ session_start();
 if (!$_SESSION["isLoggedIn"]) {
     header("Location:index.php");
 }
+$userId = $_SESSION['id'];
 if ($_SESSION["id"] != $_GET["id"]) {
-    header("Location:index.php");
+    header("Location:myprofile.php?id=$userId");
 }
 $hostname = "localhost";
 $username = "root";

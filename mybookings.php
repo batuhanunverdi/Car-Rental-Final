@@ -3,8 +3,9 @@ session_start();
 if (!$_SESSION["id"]) {
     header("Location:index.php");
 }
+$userId = $_SESSION['id'];
 if ($_SESSION["id"] != $_GET["id"]) {
-    header("Location:index.php");
+    header("Location:mybookings.php?id=$userId");
 }
 $id = $_SESSION["id"];
 $hostname = "localhost";
