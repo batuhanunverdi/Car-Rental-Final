@@ -27,8 +27,17 @@ $CustomerQuery = "SELECT * FROM customer WHERE ID =$id";
 $carId = $_GET["id"];
 $pickupDate = $_SESSION["pickupDate"];
 $deliveryDate = $_SESSION["deliveryDate"];
-$stmt = $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE) VALUES(?,?,?)");
-$stmt->bind_param("iss", $carId, $pickupDate, $deliveryDate);
+$temporaryCarsQuery = "SELECT * FROM temporarycars WHERE car_id='$carId'AND PICK_UP='$pickupDate'
+                              AND RETURN_DATE='$deliveryDate' AND customer_id!='$id'";
+$temporaryCarsResult = mysqli_query($connect,$temporaryCarsQuery);
+$count = mysqli_num_rows($temporaryCarsResult);
+if ($count > 0) {
+    $connect->close();
+    header("Location:index.php");
+    return;
+}
+$stmt = $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE,customer_id) VALUES(?,?,?,?)");
+$stmt->bind_param("issi", $carId, $pickupDate, $deliveryDate,$id);
 $stmt->execute();
 $stmt->close();
 
