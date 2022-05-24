@@ -36,11 +36,25 @@ if ($count > 0) {
     header("Location:index.php");
     return;
 }
-$stmt = $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE,customer_id) VALUES(?,?,?,?)");
-$stmt->bind_param("issi", $carId, $pickupDate, $deliveryDate,$id);
-$stmt->execute();
-$stmt->close();
 
+$temporaryCarsQuery = "SELECT * FROM temporarycars WHERE PICK_UP=?
+                              AND RETURN_DATE=? AND customer_id=?";
+$stmt = $connect->prepare($temporaryCarsQuery);
+$stmt->bind_param("ssi",$pickupDate,$deliveryDate,$id);
+$stmt->execute();
+$result = $stmt->get_result()->fetch_assoc();
+if($result==null){
+    $stmt = $connect->prepare("INSERT INTO temporarycars(`car_id`,PICK_UP,RETURN_DATE,customer_id) VALUES(?,?,?,?)");
+    $stmt->bind_param("issi", $carId, $pickupDate, $deliveryDate,$id);
+    $stmt->execute();
+    $stmt->close();
+}
+else if($result["car_id"]!=$carId){
+    $resultCarId = $result["car_id"];
+    $stmt->close();
+    $connect->close();
+    header("Location:payment.php?id=$resultCarId");
+}
 
 $CarQuery = "SELECT c.CAR_NAME,l.LOCATION,c.PRICE FROM car c INNER JOIN location l ON l.ID = c.LOCATION_ID WHERE c.ID =$carId";
 $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
