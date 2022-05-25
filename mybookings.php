@@ -103,12 +103,13 @@ if ($connect->connect_error) {
                     <th scope="col">Price</th>
                     <th scope="col">Starting Date</th>
                     <th scope="col">Ending Date</th>
+                    <th scope="col">Cancel</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
                 $sql = "SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
-                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=0 ORDER BY cc.PICK_UP";
+                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=1 ORDER BY cc.PICK_UP";
                 $cars = $connect->query($sql);
                 if (!$cars) {
                     die("Invalid Query: " . $connect->error);
@@ -135,7 +136,7 @@ if ($connect->connect_error) {
                                   <td>" . $row['PICK_UP'] . "</td>
                                   <td>" . $row['RETURN_DATE'] . "</td>
                                   <td></td>
-
+                                  <td></td>
                                   </tr>";
                     }
                 } ?>
@@ -160,7 +161,7 @@ if ($connect->connect_error) {
                 <tbody>
                 <?php
                 $sql = "SELECT c.ID,c.IMAGE,c.CAR_NAME,l.LOCATION,cc.TOTAL_PRICE,cc.PICK_UP,cc.RETURN_DATE FROM customer_car cc 
-                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=1 ORDER BY cc.PICK_UP";
+                INNER JOIN car c ON c.ID = cc.CAR_ID INNER JOIN location l ON l.ID = cc.RETURN_LOCATION_ID WHERE cc.CUSTOMER_ID= $id AND cc.isActive=0 ORDER BY cc.PICK_UP";
                 $cars = $connect->query($sql);
                 if (!$cars) {
                     die("Invalid Query: " . $connect->error);

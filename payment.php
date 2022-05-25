@@ -27,13 +27,14 @@ $CustomerQuery = "SELECT * FROM customer WHERE ID =$id";
 $carId = $_GET["id"];
 $pickupDate = $_SESSION["pickupDate"];
 $deliveryDate = $_SESSION["deliveryDate"];
-$temporaryCarsQuery = "SELECT * FROM temporarycars WHERE car_id='$carId'AND PICK_UP='$pickupDate'
-                              AND RETURN_DATE='$deliveryDate' AND customer_id!='$id'";
+$temporaryCarsQuery = "SELECT * FROM temporarycars WHERE car_id='$carId'AND NOT( PICK_UP>'$deliveryDate'
+                              AND RETURN_DATE<'$pickupDate') AND customer_id!='$id'";
 $temporaryCarsResult = mysqli_query($connect,$temporaryCarsQuery);
 $count = mysqli_num_rows($temporaryCarsResult);
 if ($count > 0) {
     $connect->close();
-    header("Location:index.php");
+    $err= "This car is currently being rented for between the selected dates.";
+    showError($err);
     return;
 }
 
@@ -299,6 +300,11 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 <?php
 if (!empty($err))
     echo "<script type='text/javascript'>alert('$err');</script>";
+function showError($err){
+    echo "<script type='text/javascript'> alert('$err');
+           window.location='index.php';
+          </script>";
+}
 ?>
 
 </body>

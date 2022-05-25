@@ -21,7 +21,14 @@ if (!isset($_SESSION["isLoggedIn"])) {
 }
 
 if (isset($_GET["logout"])) {
-    session_destroy();
+    unset($_SESSION["isLoggedIn"]);
+    unset($_SESSION["id"]);
+    unset($_SESSION["name"]);
+    unset($_SESSION["city"]);
+    unset($_SESSION["pickupDate"]);
+    unset($_SESSION["deliveryDate"]);
+    unset($_SESSION["carType"]);
+    unset($_SESSION["time"]);
     header('Location: index.php');
     die();
 }
