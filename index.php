@@ -183,7 +183,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                         return;
                     }
                 } else {
-                    $err = "Your status is false";
+                    $err = "Your account is not active";
                     $conn->close();
                     return;
                 }

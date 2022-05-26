@@ -240,6 +240,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             </div>
             <button type="submit" name="editSubmit" class="btn btn-warning mt-3 mb-3">UPDATE</button>
         </form>
+        <a type="button" class="btn btn-danger mt-3 mb-3" onclick="isUserWantsToDeactive()">Deactive Account</a>
     </div>
 </div>
 <?php
@@ -281,5 +282,13 @@ if (!empty($err))
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+<script>
+    function isUserWantsToDeactive(){
+        let isSure = confirm("Are You Sure?");
+        if(isSure){
+            window.location.href = "deactiveaccount.php?id=<?php echo $_SESSION['id'] ?>";
+        }
+    }
+</script>
 
 </html>
