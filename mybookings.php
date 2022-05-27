@@ -156,6 +156,7 @@ if ($connect->connect_error) {
                     <th scope="col">Price</th>
                     <th scope="col">Starting Date</th>
                     <th scope="col">Ending Date</th>
+                    <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>

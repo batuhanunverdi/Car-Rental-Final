@@ -14,7 +14,7 @@ if ($connect->connect_error) {
     die("Connection failed: " . $connect->connect_error);
 }
 $totalCarQuery = "SELECT * from car";
-$totalCustomerQuery = "SELECT * from customer";
+$totalCustomerQuery = "SELECT * from customer WHERE IS_ACTIVE=1";
 $totalEmployeeQuery = "SELECT * from employee";
 
 
@@ -27,7 +27,7 @@ $totalCustomer = mysqli_num_rows($totalCustomerResult);
 $totalEmployeeResult = mysqli_query($connect, $totalEmployeeQuery);
 $totalEmployee = mysqli_num_rows($totalEmployeeResult);
 
-$totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car where isActive=0";
+$totalEarningQuery = "SELECT SUM(TOTAL_PRICE) FROM customer_car where isActive=1";
 $totalEarningResult = mysqli_query($connect, $totalEarningQuery);
 $record = mysqli_fetch_array($totalEarningResult);
 $total = $record['SUM(TOTAL_PRICE)'];

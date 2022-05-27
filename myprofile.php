@@ -240,7 +240,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
             </div>
             <button type="submit" name="editSubmit" class="btn btn-warning mt-3 mb-3">UPDATE</button>
         </form>
-        <a type="button" class="btn btn-danger mt-3 mb-3" onclick="isUserWantsToDeactive()">Deactive Account</a>
+        <a type="button" class="btn btn-danger mt-3 mb-3" onclick="isUserWantsToDeactive()">Deactivate Account</a>
     </div>
 </div>
 <?php
