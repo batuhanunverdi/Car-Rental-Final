@@ -20,7 +20,7 @@ $customer = $_GET['customer'];
 $car = $_GET['car'];
 $pickUp = $_GET["pickUp"];
 $returnDate = $_GET['returnDate'];
-$sql = "UPDATE customer_car SET isActive = 1 WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='" . $car .
+$sql = "UPDATE customer_car SET isActive = 0 WHERE CUSTOMER_ID='" . $customer . "'AND CAR_ID='" . $car .
     "'AND PICK_UP='" . $pickUp . "'";
 mysqli_query($connect, $sql);
 mysqli_close($connect);

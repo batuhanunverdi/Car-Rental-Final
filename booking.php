@@ -29,7 +29,6 @@ $stmt->close();
 
 function search()
 {
-
     if ($_SESSION["isLoggedIn"]) {
         if (!empty($_POST["city"]) && !empty($_POST["pickupDate"]) && !empty($_POST["deliveryDate"]) && !empty($_POST["carType"])) {
             $day = date_diff(date_create($_POST["pickupDate"]), date_create($_POST["deliveryDate"]));
@@ -49,6 +48,7 @@ function search()
                 $_SESSION["pickupDate"] = $_POST["pickupDate"];
                 $_SESSION["deliveryDate"] = $_POST["deliveryDate"];
                 $_SESSION["carType"] = $_POST["carType"];
+                $_SESSION["time"] = time() + 150;
                 header("Location:booking.php");
             }
         } else {

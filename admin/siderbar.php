@@ -22,6 +22,18 @@
             </a>
         </li>
         <li>
+            <a href="customers.php">
+                <i class="fa fa-users" aria-hidden="true"></i> Customers
+
+            </a>
+        </li>
+        <li>
+            <a href="repairingcars.php">
+                <i class="fa fa-wrench" aria-hidden="true"></i> Repairing Cars
+
+            </a>
+        </li>
+        <li>
             <a href="login.php?logout">
                 <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
             </a>

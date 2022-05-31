@@ -3,6 +3,8 @@ session_start();
 if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
+unset($_SESSION["selectLocation"]);
+
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";
@@ -136,11 +138,25 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
         $stmt->close();
         $connect->close();
     }
+    function listBookingsByLocation(){
+        global $err;
+        if(empty($_POST["searchLocation"])){
+            $err="Location not be empty";
+            showError($err);
+        }
+        else {
+            $_SESSION["selectLocation"] = $_POST["searchLocation"];
+            header("Location:rentalsbylocation.php");
+        }
+    }
 
     if (isset($_POST['addCar'])) {
         addCar();
     }
 
+    if(isset($_POST['selectLocation'])){
+        listBookingsByLocation();
+    }
 }
 
 ?>
@@ -191,6 +207,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                             <th scope="col">Type</th>
                             <th scope="col">Engine</th>
                             <th scope="col">Plate</th>
+                            <th scope="col">Show All Reservations</th>
                             <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
                         </tr>
@@ -216,6 +233,7 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
                                   <td>" . $row['TYPE_NAME'] . "</td>
                                   <td>" . $row['ENGINE_NAME'] . "</td>
                                   <td>" . $row['PLATE'] . "</td>
+                                  <td><a class='btn btn-warning' href=\"selectedcars.php?id=" . $row['ID'] . "\">Show Reservations</a></td>
                                   <td><a class='btn btn-warning' href=\"editcar.php?id=" . $row['ID'] . "\">Edit</a></td>
                                   <td><a class='btn btn-warning' href=\"deletecar.php?id=" . $row['ID'] . "\">Delete</a></td>
                                   </tr>";
@@ -319,8 +337,30 @@ if (($_SERVER["REQUEST_METHOD"] ?? 'POST') == "POST") {
 
                     </form>
                 </div>
+
             </div>
         </div>
+    </div>
+
+    <div class="container">
+        <form action="cars.php" method="post">
+            <div class="form-floating mb-3">
+                <select class="form-control" name="searchLocation">
+                    <option value="" selected> Location</option>
+                    <?php
+                    $locationQuery = "SELECT `ID`,`LOCATION` FROM location";
+                    $locationResult = mysqli_query($connect, $locationQuery);
+                    while ($row1 = mysqli_fetch_array($locationResult)): ?>
+                        <option value="<?php echo $row1['ID']; ?>"><?php echo $row1['LOCATION']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="d-grid mb-5">
+                <button class="btn btn-warning btn-login text-uppercase fw-bold" name="selectLocation"
+                        type="submit">Add
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 <?php

@@ -3,6 +3,7 @@ session_start();
 if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
+unset($_SESSION["selectLocation"]);
 $hostname = "localhost";
 $username = "root";
 $password = "Sanane5885.";

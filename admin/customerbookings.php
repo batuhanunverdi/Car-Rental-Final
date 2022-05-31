@@ -3,7 +3,10 @@ session_start();
 if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
+$customerId = $_GET["customer"];
+$isCustomer = "SELECT * FROM customer where ID =$customerId";
 unset($_SESSION["selectLocation"]);
+
 
 $hostname = "localhost";
 $username = "root";
@@ -15,6 +18,16 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
+
+$isCustomerResult = mysqli_query($connect,$isCustomer);
+$count = mysqli_num_rows($isCustomerResult);
+
+if($count==0){
+    $err="Customer Not Found";
+    showError($err);
+
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -52,20 +65,21 @@ if ($connect->connect_error) {
                         <thead>
                         <tr>
                             <th scope="col">Customer Name</th>
-                            <th scope="col">Location</th>
+                            <th scope="col">Pick Up Location</th>
                             <th scope="col">Car NAME</th>
                             <th scope="col">Pick-up Date</th>
                             <th scope="col">Drop Date</th>
-                            <th scope="col">Delete</th>
-                            <th scope="col">Details</th>
+                            <th scope="col">Price </th>
+                            <th scope="col">Leased On</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
                         $connect = new mysqli($hostname, $username, $password, $databaseName);
-                        $sql = "SELECT cc.ID, cc.CUSTOMER_ID,cc.CAR_ID,cu.CUSTOMER_NAME,l.location,c.CAR_NAME,cc.PICK_UP,cc.RETURN_DATE 
+                        $sql = "SELECT cc.CUSTOMER_ID,cc.CAR_ID,cu.CUSTOMER_NAME,l.location,c.CAR_NAME,
+                                cc.PICK_UP,cc.RETURN_DATE,cc.TOTAL_PRICE,cc.created_date
                                 FROM customer_car cc INNER JOIN customer cu ON cu.ID= cc.CUSTOMER_ID 
-                                INNER JOIN car c ON c.ID =cc.CAR_ID INNER JOIN location l ON l.ID = c.LOCATION_ID;";
+                                INNER JOIN car c ON c.ID =cc.CAR_ID INNER JOIN location l ON l.ID = c.LOCATION_ID WHERE cc.CUSTOMER_ID=$customerId;";
                         $cars = $connect->query($sql);
                         if (!$cars) {
                             die("Invalid Query: " . $connect->error);
@@ -77,9 +91,9 @@ if ($connect->connect_error) {
                         <td>' . $row['CAR_NAME'] . '</td>
                         <td>' . $row['PICK_UP'] . '</td>
                         <td>' . $row['RETURN_DATE'] . '</td>
-                        <td><a class="btn btn-warning" href=/admin/deletebooking.php?customer=' . $row['CUSTOMER_ID'] . '&car=' . $row['CAR_ID'] . '&pickUp=' . $row['PICK_UP'] . ">Delete</a></td>
-                        <td><a class='btn btn-warning' href=\"bookingdetails.php?id=" . $row['ID'] . "\">Details</a></td>
-                        </tr>";
+                        <td>' . $row['TOTAL_PRICE'] . ' TL </td>
+                        <td>' . $row['created_date'] . '</td>
+                        </tr>';
                         } ?>
                         </tbody>
                     </table>
@@ -88,6 +102,13 @@ if ($connect->connect_error) {
         </div>
     </div>
 </div>
+<?php
+function showError($err){
+    echo "<script type='text/javascript'> alert('$err');
+           window.location='bookings.php';
+          </script>";
+}
+?>
 
 </body>
 

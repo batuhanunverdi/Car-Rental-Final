@@ -31,9 +31,19 @@ $temporaryCarsQuery = "SELECT * FROM temporarycars WHERE car_id='$carId'AND NOT(
                               AND RETURN_DATE<'$pickupDate') AND customer_id!='$id'";
 $temporaryCarsResult = mysqli_query($connect,$temporaryCarsQuery);
 $count = mysqli_num_rows($temporaryCarsResult);
+
 if ($count > 0) {
     $connect->close();
     $err= "This car is currently being rented for between the selected dates.";
+    showError($err);
+    return;
+}
+$isCarOk = "SELECT * FROM car c WHERE ID=$carId";
+$isCarOkQuery = mysqli_query($connect,$isCarOk);
+$count = mysqli_num_rows($isCarOkQuery);
+if($count ==0){
+    $connect->close();
+    $err="This car is unavailable. Please choose another car";
     showError($err);
     return;
 }

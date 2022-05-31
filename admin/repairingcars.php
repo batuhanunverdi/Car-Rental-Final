@@ -3,7 +3,6 @@ session_start();
 if (!$_SESSION["isAdminLoggedIn"]) {
     header("Location:login.php");
 }
-unset($_SESSION["selectLocation"]);
 
 $hostname = "localhost";
 $username = "root";
@@ -15,7 +14,22 @@ if ($connect->connect_error) {
     $connect->close();
     die("Connection failed: " . $connect->connect_error);
 }
-
+//$brandQuery = "SELECT `ID`,`BRAND_NAME` FROM brand";
+//$colorQuery = "SELECT `ID`,`COLOR` FROM color";
+//$typeQuery = "SELECT `ID`,`TYPE_NAME` FROM cartype";
+//$gearQuery = "SELECT `ID`,`GEAR_NAME` FROM gear";
+//$engineQuery = "SELECT `ID`,`ENGINE_NAME` FROM engine";
+//$locationQuery = "SELECT `ID`,`LOCATION` FROM location";
+//
+//
+//
+//
+//$brandResult = mysqli_query($connect, $brandQuery);
+//$colorResult = mysqli_query($connect, $colorQuery);
+//$typeResult = mysqli_query($connect, $typeQuery);
+//$gearResult = mysqli_query($connect, $gearQuery);
+//$engineResult = mysqli_query($connect, $engineQuery);
+//$locationResult = mysqli_query($connect, $locationQuery);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,9 +47,10 @@ if ($connect->connect_error) {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="admin.css">
+    <title>Admin Car</title>
 
 </head>
 
@@ -51,34 +66,24 @@ if ($connect->connect_error) {
                     <table class="table table-image table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">Customer Name</th>
-                            <th scope="col">Location</th>
                             <th scope="col">Car NAME</th>
-                            <th scope="col">Pick-up Date</th>
-                            <th scope="col">Drop Date</th>
-                            <th scope="col">Delete</th>
-                            <th scope="col">Details</th>
+                            <th scope="col">Repair Status</th>
+                            <th scope="col">Repair it</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
                         $connect = new mysqli($hostname, $username, $password, $databaseName);
-                        $sql = "SELECT cc.ID, cc.CUSTOMER_ID,cc.CAR_ID,cu.CUSTOMER_NAME,l.location,c.CAR_NAME,cc.PICK_UP,cc.RETURN_DATE 
-                                FROM customer_car cc INNER JOIN customer cu ON cu.ID= cc.CUSTOMER_ID 
-                                INNER JOIN car c ON c.ID =cc.CAR_ID INNER JOIN location l ON l.ID = c.LOCATION_ID;";
+                        $sql = "SELECT cc.CAR_ID,c.CAR_NAME,cc.isRepaired FROM servicecars cc INNER JOIN car c ON c.ID = cc.CAR_ID;";
                         $cars = $connect->query($sql);
                         if (!$cars) {
                             die("Invalid Query: " . $connect->error);
                         }
                         while ($row = $cars->fetch_assoc()) {
                             echo '<tr>
-                        <td>' . $row['CUSTOMER_NAME'] . '</td>
-                        <td>' . $row['location'] . '</td>
                         <td>' . $row['CAR_NAME'] . '</td>
-                        <td>' . $row['PICK_UP'] . '</td>
-                        <td>' . $row['RETURN_DATE'] . '</td>
-                        <td><a class="btn btn-warning" href=/admin/deletebooking.php?customer=' . $row['CUSTOMER_ID'] . '&car=' . $row['CAR_ID'] . '&pickUp=' . $row['PICK_UP'] . ">Delete</a></td>
-                        <td><a class='btn btn-warning' href=\"bookingdetails.php?id=" . $row['ID'] . "\">Details</a></td>
+                        <td>' . $row['isRepaired'] . '</td>
+                        <td><a class="btn btn-warning" href=/admin/repaircar.php?id=' . $row['CAR_ID'] .">Repair</a></td>
                         </tr>";
                         } ?>
                         </tbody>
@@ -88,7 +93,14 @@ if ($connect->connect_error) {
         </div>
     </div>
 </div>
-
+<?php
+function showError($err){
+    echo "<script type='text/javascript'> alert('$err');
+           window.location='cars.php';
+          </script>";
+}
+?>
 </body>
+
 
 </html>
